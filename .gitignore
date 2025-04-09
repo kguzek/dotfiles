@@ -2,4 +2,5 @@
 !.gitignore
 !README.md
 !install.sh
+!postinstall.sh
 
