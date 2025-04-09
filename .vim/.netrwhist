@@ -1,0 +1,12 @@
+let g:netrw_dirhistmax  =10
+let g:netrw_dirhistcnt =0
+let g:netrw_dirhist_0='/home/konrad'
+let g:netrw_dirhist_9='/home/konrad/.git'
+let g:netrw_dirhist_8='/home/konrad/.ssh'
+let g:netrw_dirhist_7='/home/konrad/.config/transmission'
+let g:netrw_dirhist_6='/var/www/html'
+let g:netrw_dirhist_5='/home/konrad/webdev/guzek-uk-v2'
+let g:netrw_dirhist_4='/home/konrad/webdev/guzek-uk-v2/api/v1'
+let g:netrw_dirhist_3='/home/konrad/webdev/guzek-uk-v2/api/v1/logs'
+let g:netrw_dirhist_2='/home/konrad/mail'
+let g:netrw_dirhist_1='/home/konrad/coding/dzwonnik-2'
