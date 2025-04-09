@@ -3,4 +3,8 @@
 !README.md
 !install.sh
 !postinstall.sh
+!.zshrc
+!.vimrc
+!.vim/
+!.vim/**
 
