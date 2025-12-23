@@ -12,7 +12,7 @@ fi
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-for file in .zshrc .vimrc .vim; do
+for file in .zshrc .zprofile .vimrc .vim; do
 	HOME_FILE="$HOME/$file"
 	if [ -f "$HOME_FILE" ]; then
 		mv "$HOME_FILE" "$HOME_FILE.bak"

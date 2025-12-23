@@ -4,6 +4,7 @@
 !install.sh
 !postinstall.sh
 !.zshrc
+!.zprofile
 !.vimrc
 !.vim/
 !.vim/**

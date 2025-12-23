@@ -1,3 +1,7 @@
+DISABLE_AUTO_UPDATE="true"
+DISABLE_COMPFIX="true"
+ZSH_DISABLE_COMPFIX="true"
+
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -32,7 +36,7 @@ ZSH_THEME="gnzh"
 # zstyle ':omz:update' frequency 13
 
 # Uncomment the following line if pasting URLs and other text is messed up.
-# DISABLE_MAGIC_FUNCTIONS="true"
+DISABLE_MAGIC_FUNCTIONS="true"
 
 # Uncomment the following line to disable colors in ls.
 # DISABLE_LS_COLORS="true"
@@ -71,7 +75,15 @@ ZSH_THEME="gnzh"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 export NVM_LAZY=1
-plugins=(git nvm zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+
+# Cache completions aggressively
+autoload -Uz compinit
+if [ "$(date +%j)" != "$(date -d "@$(stat -c %Y ~/.zcompdump 2>/dev/null || echo 0)" +%j)" ]; then
+    compinit
+else
+    compinit -C
+fi
 
 source $ZSH/oh-my-zsh.sh
 
@@ -104,30 +116,33 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
-
-
-# >>> coursier install directory >>>
-export PATH="$PATH:/home/konrad/.local/share/coursier/bin"
-# <<< coursier install directory <<<
-
-
-
 # BEGIN opam configuration
 # This is useful if you're using opam as it adds:
 #   - the correct directories to the PATH
 #   - auto-completion for the opam binary
 # This section can be safely removed at any time if needed.
-[[ ! -r '/home/konrad/.opam/opam-init/init.zsh' ]] || source '/home/konrad/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+# [[ ! -r '/home/konrad/.opam/opam-init/init.zsh' ]] || source '/home/konrad/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
 # END opam configuration
 
-export ANDROID_HOME="$HOME/Android/Sdk"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
-
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export EDITOR='nvim'
 alias vi=nvim
 
+# Lazy-loaded nvm
+export NVM_DIR="$HOME/.nvm"
 
-# opencode
-export PATH=/home/konrad/.opencode/bin:$PATH
+nvm() {
+  unset -f nvm
+  source "$NVM_DIR/nvm.sh"
+  nvm "$@"
+}
+
+node() {
+  unset -f node npm npx
+  source "$NVM_DIR/nvm.sh"
+  node "$@"
+}
+
+npm() { node "$@"; }
+npx() { node "$@"; }
+
