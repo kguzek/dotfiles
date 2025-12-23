@@ -103,3 +103,31 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+
+
+# >>> coursier install directory >>>
+export PATH="$PATH:/home/konrad/.local/share/coursier/bin"
+# <<< coursier install directory <<<
+
+
+
+# BEGIN opam configuration
+# This is useful if you're using opam as it adds:
+#   - the correct directories to the PATH
+#   - auto-completion for the opam binary
+# This section can be safely removed at any time if needed.
+[[ ! -r '/home/konrad/.opam/opam-init/init.zsh' ]] || source '/home/konrad/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
+# END opam configuration
+
+export ANDROID_HOME="$HOME/Android/Sdk"
+export PATH="$ANDROID_HOME/platform-tools:$PATH"
+
+export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+alias vi=nvim
+
+
+# opencode
+export PATH=/home/konrad/.opencode/bin:$PATH
