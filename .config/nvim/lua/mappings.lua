@@ -15,8 +15,12 @@ vim.api.nvim_del_keymap("n", "<C-n>")
 map("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tree" })
 
 map({ "n", "t" }, "<C-n>", "<cmd>ToggleTerm direction=horizontal<CR>", { desc = "Toggle terminal" })
-map({ "n", "t" }, "<C-n>k", "<cmd>ToggleTerm 9 size=80 direction=vertical name=Chat<CR>",
-  { desc = "Toggle chat terminal" })
+map(
+  { "n", "t" },
+  "<C-n>k",
+  "<cmd>ToggleTerm 9 size=80 direction=vertical name=Chat<CR>",
+  { desc = "Toggle chat terminal" }
+)
 for i = 1, 9 do
   map("n", "<C-n>" .. i, "<cmd>ToggleTerm " .. i .. " direction=horizontal<CR>", { desc = "Open terminal" })
   map("t", "<C-n>" .. i, "<C-\\><C-n><cmd>ToggleTerm " .. i .. "<CR>", { desc = "Close terminal" })

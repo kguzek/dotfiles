@@ -1,7 +1,10 @@
 # Login-only environment setup
 
 # Homebrew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+HOMEBREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
+if [ -e "$HOMEBREW_PATH" ]; then
+	eval "$("$HOMEBREW_PATH" shellenv)"
+fi
 
 # asdf shims
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
