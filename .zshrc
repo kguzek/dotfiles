@@ -151,6 +151,13 @@ nvim() {
   nvim "$@"
 }
 
-npm() { node "$@"; }
-npx() { node "$@"; }
+npm() { 
+  _init_node
+  npm "$@"
+}
+
+npx() { 
+  _init_node
+  npx "$@"
+}
 
