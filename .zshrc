@@ -161,3 +161,13 @@ npx() {
   npx "$@"
 }
 
+pm2() {
+  _init_node
+  pm2 "$@"
+}
+
+gemini() {
+  _init_node
+  gemini "$@"
+}
+
