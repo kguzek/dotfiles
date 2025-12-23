@@ -12,12 +12,21 @@ fi
 git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-for file in .zshrc .zprofile .vimrc .vim; do
-	HOME_FILE="$HOME/$file"
-	if [ -f "$HOME_FILE" ]; then
-		mv "$HOME_FILE" "$HOME_FILE.bak"
-	fi
-	ln -sn "$(pwd)/$file" "$HOME_FILE"
+# List of files and directories to symlink
+DOTFILES=".zshrc .zprofile .vimrc .vim .config/nvim"
+
+for path in $DOTFILES; do
+    SYMLINK_PATH="$HOME/$path"
+
+    # Backup existing file/dir/symlink if it exists
+    if [ -e "$SYMLINK_PATH" ]; then
+        mv "$SYMLINK_PATH" "$SYMLINK_PATH.bak"
+    fi
+
+    # Ensure parent directories exist
+    mkdir -p "$(dirname "$SYMLINK_PATH")"
+
+    # Create the symlink
+    ln -sn "$(pwd)/$path" "$SYMLINK_PATH"
 done
-source ~/.zshrc
 

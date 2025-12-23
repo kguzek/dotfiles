@@ -1,12 +1,2 @@
-*
-!.gitignore
-!README.md
-!install.sh
-!postinstall.sh
-!.zshrc
-!.zprofile
-!.vimrc
-!.vim/
-!.vim/**
 .vim/.netrwhist
 
