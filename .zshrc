@@ -124,7 +124,7 @@ source $ZSH/oh-my-zsh.sh
 # [[ ! -r '/home/konrad/.opam/opam-init/init.zsh' ]] || source '/home/konrad/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
 # END opam configuration
 
-export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
+export PATH="$PATH:/opt/nvim/bin"
 export EDITOR='nvim'
 alias vi=nvim
 
