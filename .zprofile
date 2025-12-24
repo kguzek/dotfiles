@@ -18,3 +18,7 @@ export PATH="$PATH:$HOME/.local/share/coursier/bin"
 
 # Opencode
 export PATH="$PATH:$HOME/.opencode/bin"
+
+# Snap
+export PATH="$PATH:/snap/bin"
+
