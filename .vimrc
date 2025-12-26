@@ -1,6 +1,7 @@
 scriptencoding utf-8
 syntax enable
 set number
+set relativenumber
 set cursorline
 " set tabstop=2
 colorscheme onehalfdark
@@ -37,5 +38,4 @@ let g:NERDCompactSexyComs = 1
 if &diff
 	colorscheme diffscheme
 endif
-
 
