@@ -27,7 +27,7 @@ clone_plugin() {
     echo -n "✓ Plugin $repo_name already exists, checking for updates... "
     (
       cd "$destination" || return
-      git fetch
+      git fetch --quiet
       LOCAL=$(git rev-parse @)
       REMOTE=$(git rev-parse @{u})
       if [[ $LOCAL != $REMOTE ]]; then

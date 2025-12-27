@@ -1,5 +1,5 @@
 #!/usr/bin/env zsh
 
-echo "Pull detected! Running postinstall script..."
+echo "Pull (merge) detected! Running postinstall script..."
 ./postinstall.sh
 
