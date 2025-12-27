@@ -31,7 +31,11 @@ endfunction
 call s:EnsureDirectories()
 
 " Command to play today's Golf challenge
-command! -nargs=0 GolfToday call golf#PlayToday()
+command! -nargs=0 GolfToday 
+      \ echohl WarningMsg |
+      \ echo "Notice: GolfToday is deprecated and will be removed in a future version. Please use 'Golf today' instead." |
+      \ echohl None |
+      \ call golf#PlayToday()
 
 " Command to play a specific or random Golf challenge
 " Usage:
@@ -39,4 +43,8 @@ command! -nargs=0 GolfToday call golf#PlayToday()
 "   :Golf <difficulty>" Play random challenge (easy/medium/hard)
 "   :Golf tag <tag>   " Play random challenge by tag
 "   :Golf date <YYYY-MM-DD> " Play challenge for a specific date
+"   :Golf id <id>     " Play challenge with the specified ID
+"   :Golf leaderboard " Show today's leaderboard
+"   :Golf leaderboard date <YYYY-MM-DD> " Show leaderboard for a specific date
+"   :Golf leaderboard id <id> " Show leaderboard for a specific challenge ID
 command! -nargs=* Golf call golf#DispatchGolfCommand(<f-args>) 

@@ -78,6 +78,9 @@ endfunction
 
 " Start the Golf challenge using the challenge details provided
 function! golf#PlayChallenge(challenge) abort
+  " Close any existing golf buffers before starting a new challenge
+  call golf#CloseAllBuffers()
+
   " Store challenge information for later use
   let s:golf_target_text    = a:challenge.targetText
   let s:golf_par            = a:challenge.par
@@ -85,9 +88,9 @@ function! golf#PlayChallenge(challenge) abort
   let s:golf_challenge_name = a:challenge.name
 
   " Create a new buffer for the challenge
-  enew
+  silent enew
   setlocal buftype=nofile bufhidden=hide noswapfile
-  execute 'file Golf:' . a:challenge.id
+  silent execute 'file Golf:' . a:challenge.id
 
   " Clear buffer and insert starting text
   normal! ggdG
@@ -111,97 +114,150 @@ function! golf#PlayChallenge(challenge) abort
   if l:challenge_win != -1
     execute l:challenge_win . "wincmd w"
   endif
+  normal! gg
 endfunction
 
 "========================================================================
 " Keystroke Tracking Functions
 "========================================================================
 
-" Start tracking keystrokes and set up key mappings for both normal and insert modes
 function! golf#StartTracking() abort
-  let s:golf_keystrokes = []
-  let s:golf_start_time = localtime()
-  let s:golf_tracking   = 1
-
-  " Reset success state on (re)start of tracking
+  let s:golf_keystrokes    = []
+  let s:golf_start_time    = localtime()
+  let s:golf_tracking      = 1
   let b:golf_success_shown = 0
   call golf#ClearSuccessHighlight()
 
-  " Set up mappings for printable characters in Normal mode (33-126)
-  for i in range(33, 126)
-    execute "nnoremap <expr> <char-" . i . "> <SID>KeyStrokeTracker('<char-" . i . ">')"
-  endfor
-
-  " Set up mappings for printable characters in Insert mode (32-126)
-  for i in range(32, 126)
-    execute "inoremap <expr> <char-" . i . "> <SID>KeyStrokeTracker('<char-" . i . ">')"
-  endfor
-
-  " Set up mappings for special keys in both modes
-  for key in ['<Space>', '<CR>', '<Esc>', '<BS>', '<Tab>', '<Left>', '<Right>', '<Up>', '<Down>']
-    execute "nnoremap <expr> " . key . " <SID>KeyStrokeTracker('" . key . "')"
-    execute "inoremap <expr> " . key . " <SID>KeyStrokeTracker('" . key . "')"
-  endfor
-
-  " Create autocommands for auto-verification on any text change
-  augroup GolfModeTracking
-    autocmd!
-    autocmd TextChanged,TextChangedI * call golf#AutoVerify()
-  augroup END
-
-  " Record the initial state as START
+  " record the START event
   call golf#RecordKeystroke('START')
 
-  " Flag buffer as tracking active
-  let b:golf_tracking = 1
+  " modes → mapping commands (now includes command-line 'c')
+  let l:modes = {
+        \ 'n': 'nnoremap',
+        \ 'i': 'inoremap',
+        \ 'v': 'vnoremap',
+        \ 'x': 'xnoremap',
+        \ 'o': 'onoremap',
+        \ 's': 'snoremap',
+        \ 'c': 'cnoremap'
+        \ }
+
+  " Special handling for pipe character
+  for mode in keys(l:modes)
+    let cmd = l:modes[mode]
+    execute cmd . ' <buffer> <expr> <Bar> golf#RecordAndReturn("\|")'
+  endfor
+
+  " map printable ASCII 32–126 (excluding pipe which is handled separately)
+  for code in range(32, 126)
+    let ch = nr2char(code)
+    if ch !=# '|'  " Skip pipe character as it's handled above
+      let lhs = ch
+      for mode in keys(l:modes)
+        let cmd = l:modes[mode]
+        execute printf(
+              \ '%s <buffer> <expr> %s golf#RecordAndReturn(%s)',
+              \ cmd, lhs, string(ch)
+              \ )
+      endfor
+    endif
+  endfor
+
+  " map special keys
+  let l:specials = ['<Space>','<CR>','<Esc>','<BS>','<Tab>',
+        \ '<Left>','<Right>','<Up>','<Down>']
+  for sp in l:specials
+    for mode in keys(l:modes)
+      let cmd = l:modes[mode]
+      execute printf(
+            \ '%s <buffer> <expr> %s golf#RecordAndReturn(%s)',
+            \ cmd, sp, string(sp)
+            \ )
+    endfor
+  endfor
+
+  " auto‑verify on any change
+  augroup GolfModeTracking
+    autocmd!
+    autocmd TextChanged,TextChangedI <buffer> call golf#AutoVerify()
+  augroup END
 endfunction
 
-" Intercept and record a keystroke; called by mappings
-function! s:KeyStrokeTracker(key) abort
+" helper to record the key AND immediately refresh statusline
+function! golf#RecordAndReturn(key) abort
   if s:golf_tracking
     call golf#RecordKeystroke(a:key)
+    redrawstatus
   endif
   return a:key
+endfunction
+
+function! golf#StopTracking() abort
+  let s:golf_tracking = 0
+
+  " we just need the mode‑letters for unmapping
+  let l:modes = ['n','i','v','x','o','s','c']
+
+  " unmap printable ASCII
+  for code in range(32, 126)
+    let ch  = nr2char(code)
+    let lhs = (ch ==# '|') ? '<Bar>' : ch
+    for m in l:modes
+      execute printf('%sunmap <buffer> %s', m, lhs)
+    endfor
+  endfor
+
+  " unmap special keys
+  let l:specials = ['<Space>','<CR>','<Esc>','<BS>','<Tab>',
+        \ '<Left>','<Right>','<Up>','<Down>']
+  for sp in l:specials
+    for m in l:modes
+      execute printf('%sunmap <buffer> %s', m, sp)
+    endfor
+  endfor
+
+  augroup GolfModeTracking
+    autocmd!
+  augroup END
+
+  echo "Golf tracking stopped."
 endfunction
 
 " Add a keystroke event to the tracker
 function! golf#RecordKeystroke(key) abort
   if s:golf_tracking
-    call add(s:golf_keystrokes, {'key': a:key})
+    " Comprehensive sanitization for all keys
+    let l:sanitized_key = a:key
+    
+    " Handle special keys with standard notation
+    if a:key =~# '^\\\?' || len(a:key) > 1
+      " Convert special keys to their angle bracket notation if needed
+      let l:key_map = {
+            \ "\<BS>": '<BS>', '<BS>': '<BS>',
+            \ "\<Tab>": '<Tab>', '<Tab>': '<Tab>',
+            \ "\<CR>": '<CR>', '<CR>': '<CR>',
+            \ "\<Esc>": '<Esc>', '<Esc>': '<Esc>',
+            \ "\<Space>": '<Space>', '<Space>': '<Space>',
+            \ "\<Left>": '<Left>', '<Left>': '<Left>',
+            \ "\<Right>": '<Right>', '<Right>': '<Right>',
+            \ "\<Up>": '<Up>', '<Up>': '<Up>',
+            \ "\<Down>": '<Down>', '<Down>': '<Down>',
+            \ "\|": '|', '<Bar>': '|'
+            \ }
+      
+      if has_key(l:key_map, a:key)
+        let l:sanitized_key = l:key_map[a:key]
+      else
+        " For any other unknown special key, use a safe representation
+        let l:sanitized_key = substitute(a:key, '[^\x20-\x7E]', '', 'g')
+      endif
+    endif
+    
+    " Skip empty keys after sanitization
+    if !empty(l:sanitized_key)
+      call add(s:golf_keystrokes, {'key': l:sanitized_key})
+    endif
   endif
-endfunction
-
-" Stop tracking keystrokes: remove mappings and autocommands, then cleanup
-function! golf#StopTracking() abort
-  let s:golf_tracking = 0
-
-  " Remove mappings in Normal mode (33-126)
-  for i in range(33, 126)
-    execute "nunmap <char-" . i . ">"
-  endfor
-
-  " Remove mappings in Insert mode (32-126)
-  for i in range(32, 126)
-    execute "iunmap <char-" . i . ">"
-  endfor
-
-  " Remove mappings for special keys
-  for key in ['<Space>', '<CR>', '<Esc>', '<BS>', '<Tab>', '<Left>', '<Right>', '<Up>', '<Down>']
-    execute "nunmap " . key
-    execute "iunmap " . key
-  endfor
-
-  " Clear autocommands
-  augroup GolfModeTracking
-    autocmd!
-  augroup END
-
-  " Remove tracking flag from buffer variable, if exists
-  if exists('b:golf_tracking')
-    unlet b:golf_tracking
-  endif
-
-  echo "Golf tracking stopped."
 endfunction
 
 "========================================================================
@@ -252,7 +308,7 @@ function! golf#ShowSuccess() abort
   if l:score.value <= -2
     let l:emoji = '🦅'
   elseif l:score.value == -1
-    let l:emoji = '🐦'
+    let l:emoji = '��'
   elseif l:score.value >= 3
     let l:emoji = '😖'
   elseif l:score.value >= 2
@@ -416,12 +472,40 @@ function! golf#CalculateScore(keystroke_count) abort
   endif
 endfunction
 
+" Sanitize keylog before submission to ensure all entries are valid UTF-8
+function! golf#SanitizeKeylog(keylog) abort
+  let l:sanitized = []
+  
+  for entry in a:keylog
+    let l:key = get(entry, 'key', '')
+    
+    " Filter out problematic or invalid characters
+    if !empty(l:key)
+      " Double-check that the key is valid ASCII
+      if l:key =~# '^<.*>$' || strlen(substitute(l:key, '[^\x20-\x7E]', '', 'g')) == strlen(l:key)
+        call add(l:sanitized, {'key': l:key})
+      else
+        " If not, convert to a safe string by removing non-ASCII chars
+        let l:safe_key = substitute(l:key, '[^\x20-\x7E]', '', 'g')
+        if !empty(l:safe_key)
+          call add(l:sanitized, {'key': l:safe_key})
+        endif
+      endif
+    endif
+  endfor
+  
+  return l:sanitized
+endfunction
+
 " Save results by submitting to the API; report errors if any
 function! golf#SaveResults(keystroke_count, time_taken, score) abort
+  " Sanitize the keylog before submission
+  let l:sanitized_keylog = golf#SanitizeKeylog(s:golf_keystrokes)
+  
   let l:api_response = golf_api#SubmitSolution(
         \ s:golf_challenge_id,
         \ a:keystroke_count,
-        \ s:golf_keystrokes,
+        \ l:sanitized_keylog,
         \ a:time_taken,
         \ a:score.value
         \ )
@@ -448,10 +532,10 @@ endfunction
 function! golf#CloseAllBuffers() abort
   let l:buffers = filter(range(1, bufnr('$')), 'bufexists(v:val) && bufname(v:val) =~# "^Golf:"')
   for l:buf in l:buffers
-    execute 'bwipeout! ' . l:buf
+    silent execute 'bwipeout! ' . l:buf
   endfor
   if bufexists(s:golf_original_buffer)
-    execute 'buffer ' . s:golf_original_buffer
+    silent execute 'buffer ' . s:golf_original_buffer
   endif
 endfunction
 
@@ -466,10 +550,16 @@ function! golf#ShowTargetText() abort
     return
   endif
 
+  " Check if Golf:Target buffer already exists and close it if it does
+  let l:target_buffer = bufnr('Golf:Target')
+  if l:target_buffer != -1
+    silent execute 'bwipeout! ' . l:target_buffer
+  endif
+
   let l:current_buffer = bufnr('%')
-  vnew
+  silent vnew
   setlocal buftype=nofile bufhidden=hide noswapfile
-  execute 'file Golf:Target'
+  silent execute 'file Golf:Target'
   call setline(1, "TARGET TEXT - GOAL")
   call append(1, split(s:golf_target_text, "\n"))
 
@@ -493,6 +583,18 @@ function! golf#ShowTargetText() abort
   syncbind
 endfunction
 
+" Play a challenge by its ID
+function! golf#PlayChallengeById(id) abort
+  let s:golf_original_buffer = bufnr('%')
+  echo "Fetching challenge with ID: " . a:id . "..."
+  let l:challenge = golf_api#FetchChallenge(a:id)
+  if empty(l:challenge) || empty(get(l:challenge, 'id', '')) || empty(get(l:challenge, 'targetText', ''))
+    echoerr "Failed to fetch challenge with ID: " . a:id . "."
+    return
+  endif
+  call golf#PlayChallenge(l:challenge)
+endfunction
+
 " Dispatcher for the :Golf command based on arguments
 function! golf#DispatchGolfCommand(...) abort
   let l:argc = a:0
@@ -504,8 +606,17 @@ function! golf#DispatchGolfCommand(...) abort
     let l:arg1 = tolower(a:1)
     if l:arg1 == 'easy' || l:arg1 == 'medium' || l:arg1 == 'hard'
       call golf#PlayChallengeByDifficulty(l:arg1)
+    elseif l:arg1 == 'leaderboard'
+      " :Golf leaderboard -> Show today's leaderboard
+      call golf#ShowTodaysLeaderboard()
+    elseif l:arg1 == 'today'
+      " :Golf today -> Play today's challenge
+      call golf#PlayToday()
+    elseif l:arg1 == 'help'
+      " :Golf help -> Show available commands
+      call golf#ShowHelp()
     else
-      echoerr "Invalid argument: " . a:1 . ". Use 'easy', 'medium', 'hard', 'tag <tag>', or 'date <YYYY-MM-DD>'."
+      echoerr "Invalid argument: " . a:1 . ". Use 'easy', 'medium', 'hard', 'today', 'leaderboard', 'tag <tag>', 'date <YYYY-MM-DD>', 'id <id>', or 'help'."
     endif
   elseif l:argc == 2
     let l:arg1 = tolower(a:1)
@@ -520,11 +631,48 @@ function! golf#DispatchGolfCommand(...) abort
       else
         echoerr "Invalid date format: " . l:arg2 . ". Use YYYY-MM-DD format."
       endif
+    elseif l:arg1 == 'id'
+      " :Golf id <id>
+      call golf#PlayChallengeById(l:arg2)
+    elseif l:arg1 == 'leaderboard' && tolower(l:arg2) == 'date'
+      " Prompt for date when just :Golf leaderboard date is entered
+      let l:date = input('Enter date (YYYY-MM-DD): ')
+      if l:date =~ '^\d\{4}-\d\{2}-\d\{2}$'
+        call golf#ShowLeaderboardByDate(l:date)
+      else
+        echoerr "Invalid date format: " . l:date . ". Use YYYY-MM-DD format."
+      endif
+    elseif l:arg1 == 'leaderboard' && tolower(l:arg2) == 'id'
+      " Prompt for ID when just :Golf leaderboard id is entered
+      let l:id = input('Enter challenge ID: ')
+      if !empty(l:id)
+        call golf#ShowLeaderboardById(l:id)
+      else
+        echoerr "Challenge ID cannot be empty."
+      endif
     else
-      echoerr "Invalid command structure. Use ':Golf', ':Golf <difficulty>', ':Golf tag <tag>', or ':Golf date <YYYY-MM-DD>'."
+      echoerr "Invalid command structure. Use ':Golf', ':Golf <difficulty>', ':Golf today', ':Golf leaderboard', ':Golf tag <tag>', ':Golf date <YYYY-MM-DD>', ':Golf id <id>', ':Golf leaderboard date <YYYY-MM-DD>', ':Golf leaderboard id <id>', or ':Golf help'."
+    endif
+  elseif l:argc == 3
+    let l:arg1 = tolower(a:1)
+    let l:arg2 = tolower(a:2)
+    let l:arg3 = a:3
+    
+    if l:arg1 == 'leaderboard' && l:arg2 == 'date'
+      " :Golf leaderboard date <YYYY-MM-DD>
+      if l:arg3 =~ '^\d\{4}-\d\{2}-\d\{2}$'
+        call golf#ShowLeaderboardByDate(l:arg3)
+      else
+        echoerr "Invalid date format: " . l:arg3 . ". Use YYYY-MM-DD format."
+      endif
+    elseif l:arg1 == 'leaderboard' && l:arg2 == 'id'
+      " :Golf leaderboard id <id>
+      call golf#ShowLeaderboardById(l:arg3)
+    else
+      echoerr "Invalid command structure. Check the documentation for valid commands."
     endif
   else
-    echoerr "Too many arguments. Use ':Golf', ':Golf <difficulty>', ':Golf tag <tag>', or ':Golf date <YYYY-MM-DD>'."
+    echoerr "Too many arguments. Use ':Golf help' to see available commands."
   endif
 endfunction
 
@@ -562,4 +710,202 @@ function! golf#PlayChallengeByDate(date) abort
     return
   endif
   call golf#PlayChallenge(l:challenge)
+endfunction
+
+"========================================================================
+" Leaderboard Functions
+"========================================================================
+
+" Display leaderboard for a challenge
+function! golf#DisplayLeaderboard(leaderboard, challenge_name) abort
+  " Create a new scratch buffer for the leaderboard
+  enew
+  setlocal buftype=nofile bufhidden=wipe noswapfile nonumber norelativenumber
+  setlocal signcolumn=no nocursorline nocursorcolumn
+  execute 'file Golf:Leaderboard'
+
+  " Build the leaderboard display
+  let l:lines = []
+  call add(l:lines, '╔═══════════════════════════════════════════════════════════════╗')
+  call add(l:lines, '║                        LEADERBOARD 🏆                          ║')
+  
+  if !empty(a:challenge_name)
+    call add(l:lines, '╠═══════════════════════════════════════════════════════════════╣')
+    call add(l:lines, '║  Challenge: ' . a:challenge_name)
+  endif
+  
+  call add(l:lines, '╠═══════════════════════════════════════════════════════════════╣')
+  
+  " Add leaderboard entries
+  if !empty(a:leaderboard)
+    let l:rank = 1
+    for entry in a:leaderboard
+      let l:entry_time    = entry.time_taken
+      let l:entry_minutes = l:entry_time / 60
+      let l:entry_seconds = l:entry_time % 60
+      call add(l:lines, printf('║  %d. %s - %d strokes (%dm %ds)', 
+            \ l:rank, entry.user_id, entry.keystrokes, l:entry_minutes, l:entry_seconds))
+      if has_key(entry, 'keylog') && !empty(entry.keylog)
+        let l:keystrokes = []
+        for k in entry.keylog
+          if k.key ==# '<Space>'
+            call add(l:keystrokes, '␣')
+          elseif k.key ==# '<CR>'
+            call add(l:keystrokes, '⏎')
+          elseif k.key ==# '<Esc>'
+            call add(l:keystrokes, '⎋')
+          elseif k.key ==# '<BS>'
+            call add(l:keystrokes, '⌫')
+          elseif k.key ==# '<Tab>'
+            call add(l:keystrokes, '⇥')
+          elseif k.key ==# '<Left>'
+            call add(l:keystrokes, '←')
+          elseif k.key ==# '<Right>'
+            call add(l:keystrokes, '→')
+          elseif k.key ==# '<Up>'
+            call add(l:keystrokes, '↑')
+          elseif k.key ==# '<Down>'
+            call add(l:keystrokes, '↓')
+          else
+            call add(l:keystrokes, k.key)
+          endif
+        endfor
+
+        " Wrap the formatted keystrokes to a maximum width
+        let l:keystroke_str = join(l:keystrokes, '')
+        let l:max_width = 50
+        while len(l:keystroke_str) > 0
+          let l:line_part = strpart(l:keystroke_str, 0, l:max_width)
+          let l:keystroke_str = strpart(l:keystroke_str, l:max_width)
+          call add(l:lines, printf('║    %s%s', l:line_part, repeat(' ', l:max_width - len(l:line_part))))
+        endwhile
+      else
+        call add(l:lines, '║    (Keystrokes not available)')
+      endif
+      if l:rank < len(a:leaderboard)
+        call add(l:lines, '╟───────────────────────────────────────────────────────────────╢')
+      endif
+      let l:rank += 1
+    endfor
+  else
+    call add(l:lines, '║  No entries yet for this challenge!')
+  endif
+  
+  call add(l:lines, '║')
+  call add(l:lines, '║  Press any key to exit...                                      ║')
+  call add(l:lines, '╚═══════════════════════════════════════════════════════════════╝')
+
+  " Display the leaderboard in the buffer
+  call setline(1, l:lines)
+  syntax match GolfLeaderboardHeader /^║.*LEADERBOARD.*║$/
+  syntax match GolfLeaderboardEntry /^║\s\+\d\+\./
+  syntax match GolfLeaderboardBorder /[║╔╗╚╝╠╣═]/
+  highlight GolfLeaderboardHeader ctermfg=magenta guifg=#FF00FF
+  highlight GolfLeaderboardEntry ctermfg=cyan guifg=#00FFFF
+  highlight GolfLeaderboardBorder ctermfg=white guifg=#FFFFFF
+
+  setlocal readonly nomodifiable
+  normal! gg
+  redrawstatus!
+
+  " Allow modifications temporarily to capture key input
+  setlocal modifiable
+  echo "Press any key to exit..."
+  call getchar()
+
+  " Close the buffer
+  bwipeout!
+endfunction
+
+" Show today's leaderboard
+function! golf#ShowTodaysLeaderboard() abort
+  echo "Fetching today's leaderboard..."
+  let l:today_challenge = golf_api#FetchDailyChallenge()
+  if empty(l:today_challenge) || empty(get(l:today_challenge, 'id', ''))
+    echoerr "Failed to fetch today's challenge."
+    return
+  endif
+  
+  let l:leaderboard = golf_api#FetchLeaderboard(l:today_challenge.id)
+  call golf#DisplayLeaderboard(l:leaderboard, l:today_challenge.name)
+endfunction
+
+" Show leaderboard for a specific date
+function! golf#ShowLeaderboardByDate(date) abort
+  echo "Fetching leaderboard for date: " . a:date . "..."
+  let l:challenge = golf_api#FetchChallengeByDate(a:date)
+  if empty(l:challenge) || empty(get(l:challenge, 'id', ''))
+    echoerr "Failed to fetch challenge for date: " . a:date . "."
+    return
+  endif
+  
+  let l:leaderboard = golf_api#FetchLeaderboard(l:challenge.id)
+  call golf#DisplayLeaderboard(l:leaderboard, l:challenge.name)
+endfunction
+
+" Show leaderboard for a specific challenge ID
+function! golf#ShowLeaderboardById(id) abort
+  echo "Fetching leaderboard for challenge ID: " . a:id . "..."
+  let l:challenge = golf_api#FetchChallenge(a:id)
+  let l:challenge_name = empty(l:challenge) ? "Challenge #" . a:id : l:challenge.name
+  
+  let l:leaderboard = golf_api#FetchLeaderboard(a:id)
+  call golf#DisplayLeaderboard(l:leaderboard, l:challenge_name)
+endfunction
+
+" Show help information with available commands
+function! golf#ShowHelp() abort
+  " Create a new buffer for the help information
+  enew
+  setlocal buftype=nofile bufhidden=wipe noswapfile nonumber norelativenumber
+  setlocal signcolumn=no nocursorline nocursorcolumn
+  execute 'file Golf:Help'
+
+  " Build the help content
+  let l:lines = []
+  call add(l:lines, '╔═══════════════════════════════════════════════════════════════╗')
+  call add(l:lines, '║                        GOLF.VIM HELP                          ║')
+  call add(l:lines, '╠═══════════════════════════════════════════════════════════════╣')
+  call add(l:lines, '║  PLAYING CHALLENGES:                                          ║')
+  call add(l:lines, '║    :Golf today                 - Play today''s challenge       ║')
+  call add(l:lines, '║    :Golf                       - Play random challenge        ║')
+  call add(l:lines, '║    :Golf easy                  - Play random easy challenge   ║')
+  call add(l:lines, '║    :Golf medium                - Play random medium challenge ║')
+  call add(l:lines, '║    :Golf hard                  - Play random hard challenge   ║')
+  call add(l:lines, '║    :Golf tag <tag>             - Play challenge with tag      ║')
+  call add(l:lines, '║    :Golf date <YYYY-MM-DD>     - Play challenge from date     ║')
+  call add(l:lines, '║    :Golf id <id>               - Play challenge by ID         ║')
+  call add(l:lines, '║                                                               ║')
+  call add(l:lines, '║  VIEWING LEADERBOARDS:                                        ║')
+  call add(l:lines, '║    :Golf leaderboard           - Today''s leaderboard         ║')
+  call add(l:lines, '║    :Golf leaderboard date <YYYY-MM-DD>                        ║')
+  call add(l:lines, '║    :Golf leaderboard id <id>                                  ║')
+  call add(l:lines, '║                                                               ║')
+  call add(l:lines, '║  HELP:                                                        ║')
+  call add(l:lines, '║    :Golf help                  - Show this help information   ║')
+  call add(l:lines, '║                                                               ║')
+  call add(l:lines, '║  Note: The legacy command :GolfToday is still supported       ║')
+  call add(l:lines, '║  but will be deprecated in a future version.                  ║')
+  call add(l:lines, '╚═══════════════════════════════════════════════════════════════╝')
+
+  " Display the help content in the buffer
+  call setline(1, l:lines)
+  syntax match GolfHelpHeader /^║.*GOLF.VIM HELP.*║$/
+  syntax match GolfHelpSection /^║\s\+[A-Z].*:$/
+  syntax match GolfHelpCommand /^║\s\+:[A-Za-z]\+/
+  syntax match GolfHelpBorder /[║╔╗╚╝╠╣═]/
+  highlight GolfHelpHeader ctermfg=yellow guifg=#FFD700
+  highlight GolfHelpSection ctermfg=green guifg=#00FF00
+  highlight GolfHelpCommand ctermfg=cyan guifg=#00FFFF
+  highlight GolfHelpBorder ctermfg=white guifg=#FFFFFF
+
+  setlocal readonly nomodifiable
+  normal! gg
+  redrawstatus!
+
+  " Allow modifications temporarily to capture key input
+  setlocal modifiable
+  echo "Press any key to exit..."
+  call getchar()
+  bwipeout!
 endfunction
