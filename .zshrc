@@ -135,7 +135,10 @@ NODE_CMDS=(nvm node npm npx nvim gemini pm2)
 
 _init_node() {
   unset -f "${NODE_CMDS[@]}"
-  source "$NVM_DIR/nvm.sh"
+  local nvm_script_path="$NVM_DIR/nvm.sh"
+  if [ -f "$nvm_script_path" ]; then
+    source "$nvm_script_path"
+  fi
 }
 
 for cmd in "${NODE_CMDS[@]}"; do
