@@ -1,4 +1,4 @@
-local util = require("conform.util")
+local util = require "conform.util"
 
 local function biome_or_prettier(bufnr)
   if util.root_file({ "biome.json" }, bufnr) then
@@ -19,6 +19,7 @@ local options = {
 
     css = { "prettierd" },
     html = { "prettierd" },
+    markdown = { "prettierd" },
   },
 
   format_on_save = {
