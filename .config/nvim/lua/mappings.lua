@@ -17,7 +17,7 @@ map(
 )
 
 map("n", "<leader>o", "o<Esc>k", { desc = "Blank line below" })
-map("n", "<leader>O", "O<Esc>k", { desc = "Blank line above" })
+map("n", "<leader>O", "O<Esc>j", { desc = "Blank line above" })
 
 vim.api.nvim_del_keymap("n", "<C-n>")
 map("n", "<C-b>", "<cmd>NvimTreeToggle<CR>", { desc = "Toggle file tree" })
