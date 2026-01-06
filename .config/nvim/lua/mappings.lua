@@ -6,7 +6,15 @@ local map = vim.keymap.set
 
 -- map("n", ";", ":", { desc = "CMD enter command mode" })
 map("i", "jk", "<ESC>")
+
+-- Telescope
 map("n", "<C-p>", "<cmd>Telescope git_files<CR>", { desc = "Telescope git files" })
+map(
+  "n",
+  "<leader>fg",
+  "<cmd>lua require('telescope').extensions.live_grep_args.live_grep_args()<CR>",
+  { desc = "Telescope live grep with arguments" }
+)
 
 map("n", "<leader>o", "o<Esc>k", { desc = "Blank line below" })
 map("n", "<leader>O", "O<Esc>k", { desc = "Blank line above" })
