@@ -145,3 +145,17 @@ for cmd in "${NODE_CMDS[@]}"; do
   eval "$cmd() { _init_node; $cmd \"\$@\" }"
 done
 
+# Git post-merge script
+gpm() {
+  local branch=$(git_current_branch)
+  local main_branch=$(git_main_branch)
+  if [ "$branch" = "$main_branch" ]; then
+    echo "Already on branch $main_branch."
+  else
+    git fetch --prune
+    git checkout "$main_branch"
+    git pull --rebase
+    git branch --delete "$branch"
+  fi
+}
+
