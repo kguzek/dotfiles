@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
@@ -11,5 +11,5 @@ fi
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-echo "After updating your default shell to zsh, please log out and log back in, then run postinstall.sh"
+echo "After updating your default shell to zsh, please log out and log back in, then run postinstall.zsh"
 

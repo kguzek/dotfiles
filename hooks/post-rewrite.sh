@@ -1,5 +1,5 @@
-#!/usr/bin/env zsh
+#!/bin/sh
 
 echo "Pull (rewrite) detected! Running postinstall script..."
-./postinstall.sh
+./postinstall.zsh
 
