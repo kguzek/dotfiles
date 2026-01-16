@@ -131,7 +131,7 @@ alias vi=nvim
 # Lazy-loaded nvm
 export NVM_DIR="$HOME/.nvm"
 
-NODE_CMDS=(nvm node npm npx nvim gemini pm2)
+NODE_CMDS=(nvm node npm npx pnpm nvim gemini pm2)
 
 _init_node() {
   unset -f "${NODE_CMDS[@]}"
