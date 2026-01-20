@@ -152,10 +152,15 @@ gpm() {
   if [ "$branch" = "$main_branch" ]; then
     echo "Already on branch $main_branch."
   else
-    git fetch --prune
+    git fetch
+    git pull --rebase # in case the feature branch was rebased via GitHub's UI
     git checkout "$main_branch"
     git pull --rebase
-    git branch --delete "$branch"
+    git branch --delete "$branch" # this should work while the feature branch's origin ref is present
+    git remote prune origin # prune it at the end, so deleting doesn't require confirmation
   fi
 }
+
+# bun completions
+[ -s "/home/konrad/.bun/_bun" ] && source "/home/konrad/.bun/_bun"
 
