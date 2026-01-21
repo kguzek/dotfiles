@@ -55,7 +55,7 @@ end
 
 lua_custom()
 
-local servers = { "html", "cssls", "ts_ls", "tailwindcss" }
+local servers = { "html", "cssls", "ts_ls", "tailwindcss", "ruff" }
 vim.lsp.enable(servers)
 
 -- read :h vim.lsp.config for changing options of lsp servers

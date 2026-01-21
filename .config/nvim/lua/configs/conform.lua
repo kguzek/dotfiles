@@ -1,29 +1,5 @@
-local util = require "conform.util"
-
 local prettier = { "prettierd" }
-
-local function has_biome(bufnr)
-  local bufname = vim.api.nvim_buf_get_name(bufnr)
-  if bufname == "" then
-    return false
-  end
-
-  local start_dir = vim.fs.dirname(bufname)
-
-  local root = vim.fs.root(start_dir, { "biome.json", ".git" })
-  if not root then
-    return false
-  end
-
-  return vim.loop.fs_stat(root .. "/biome.json") ~= nil
-end
-
-local function biome_or_prettier(bufnr)
-  if has_biome(bufnr) then
-    return { "biome" }
-  end
-  return prettier
-end
+local biome_or_prettier = { "prettierd", "biome" }
 
 local options = {
   formatters_by_ft = {
@@ -38,6 +14,12 @@ local options = {
     css = prettier,
     html = prettier,
     markdown = prettier,
+
+    python = {
+      "ruff_fix", -- To fix auto-fixable lint errors.
+      "ruff_format", -- To run the Ruff formatter.
+      "ruff_organize_imports", -- To organize the imports.
+    },
   },
 
   format_on_save = {

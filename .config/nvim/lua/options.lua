@@ -1,8 +1,9 @@
 require "nvchad.options"
 
--- add yours here!
-
 vim.opt.relativenumber = true
 
--- local o = vim.o
--- o.cursorlineopt ='both' -- to enable cursorline!
+vim.opt.foldenable = true
+vim.opt.foldlevel = 20
+vim.opt.foldcolumn = "auto:9"
+
+vim.o.cursorlineopt = "both"
