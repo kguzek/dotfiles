@@ -9,6 +9,8 @@ return {
       "css",
       "typescript",
       "javascript",
+      "tsx",
+      "jsx",
       "json",
       "python",
       "bash",
