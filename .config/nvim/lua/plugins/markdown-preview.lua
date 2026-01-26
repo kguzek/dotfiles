@@ -1,5 +1,5 @@
 return {
-  "iamcco/markdown-preview.nvim",
+  "UtkarshKunwar/markdown-preview.nvim",
   cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
   ft = { "markdown" },
   build = function(plugin)
