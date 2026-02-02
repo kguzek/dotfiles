@@ -36,6 +36,7 @@ local options = {
     css = prettier,
     html = prettier,
     markdown = prettier,
+    yaml = prettier,
 
     python = {
       "ruff_fix", -- To fix auto-fixable lint errors.
