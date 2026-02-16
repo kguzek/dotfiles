@@ -33,3 +33,7 @@ for i = 1, 9 do
 end
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
+
+-- LSP error lines
+map("", "<leader>l", require "toggle-error-lines", { desc = "Toggle lsp_lines" })
+map("", "<leader>;", vim.diagnostic.open_float, { desc = "Open error diagnostic float" })
