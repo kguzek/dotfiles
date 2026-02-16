@@ -29,10 +29,13 @@ require("lazy").setup({
 dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
+-- set error display
+vim.diagnostic.config { virtual_text = false }
+vim.diagnostic.config { virtual_lines = true }
+
 require "options"
 require "autocmds"
 
 vim.schedule(function()
   require "mappings"
 end)
-vim.schedule(require "toggle-error-lines")
