@@ -174,3 +174,7 @@ gpm() {
 # bun completions
 [ -s "/home/konrad/.bun/_bun" ] && source "/home/konrad/.bun/_bun"
 
+# direnv hook
+if command -v direnv >/dev/null 2>&1; then
+  eval "$(direnv hook zsh)"
+fi
