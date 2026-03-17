@@ -1,5 +1,7 @@
 local prettier = { "prettierd" }
 
+local BIOME_CONFIG_FILENAMES = { "biome.json", "biome.jsonc" }
+
 local function has_biome(bufnr)
   local bufname = vim.api.nvim_buf_get_name(bufnr)
   if bufname == "" then
@@ -8,12 +10,18 @@ local function has_biome(bufnr)
 
   local start_dir = vim.fs.dirname(bufname)
 
-  local root = vim.fs.root(start_dir, { "biome.json", ".git" })
+  local root = vim.fs.root(start_dir, { unpack(BIOME_CONFIG_FILENAMES), ".git" })
   if not root then
     return false
   end
 
-  return vim.loop.fs_stat(root .. "/biome.json") ~= nil
+  for _, file in ipairs(BIOME_CONFIG_FILENAMES) do
+    if vim.loop.fs_stat(root .. "/" .. file) then
+      return true
+    end
+  end
+
+  return false
 end
 
 local function biome_or_prettier(bufnr)
