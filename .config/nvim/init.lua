@@ -30,8 +30,8 @@ dofile(vim.g.base46_cache .. "defaults")
 dofile(vim.g.base46_cache .. "statusline")
 
 -- set error display
-vim.diagnostic.config { virtual_text = false }
-vim.diagnostic.config { virtual_lines = true }
+vim.diagnostic.config { virtual_text = true }
+vim.diagnostic.config { virtual_lines = false }
 
 require "options"
 require "autocmds"
