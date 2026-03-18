@@ -51,6 +51,9 @@ local options = {
       "ruff_format", -- To run the Ruff formatter.
       "ruff_organize_imports", -- To organize the imports.
     },
+
+    c = { "clang-format" },
+    cpp = { "clang-format" },
   },
 
   format_on_save = {
