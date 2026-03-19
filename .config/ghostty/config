@@ -1,4 +1,8 @@
 term = xterm-256color
+window-width = 160
+window-height = 40
 background-opacity = 0.4
+background = #000
 background-blur = macos-glass-regular
 background-blur-radius = 60
+gtk-titlebar-style = tabs
