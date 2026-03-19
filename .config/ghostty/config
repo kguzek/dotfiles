@@ -1,0 +1,4 @@
+term = xterm-256color
+background-opacity = 0.4
+background-blur = macos-glass-regular
+background-blur-radius = 60
