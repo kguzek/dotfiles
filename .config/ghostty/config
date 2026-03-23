@@ -6,4 +6,5 @@ background = #000
 background-blur = macos-glass-regular
 background-blur-radius = 40
 gtk-titlebar-style = tabs
+macos-titlebar-style = tabs
 window-padding-x = 18
