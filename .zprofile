@@ -22,3 +22,9 @@ export PATH="$PATH:$HOME/.opencode/bin"
 # Snap
 export PATH="$PATH:/snap/bin"
 
+# Bun
+if [ -d "$HOME/.bun" ]; then
+  export BUN_INSTALL="$HOME/.bun"
+  export PATH="$BUN_INSTALL/bin:$PATH"
+fi
+
