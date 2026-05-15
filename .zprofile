@@ -34,3 +34,6 @@ if [ -d "$LOCAL_SCRIPTS_PATH" ]; then
   export PATH="$LOCAL_SCRIPTS_PATH:$PATH"
 fi
 
+if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ] && command -v start-hyprland >/dev/null; then
+  exec start-hyprland
+fi
