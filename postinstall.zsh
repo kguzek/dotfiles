@@ -75,7 +75,7 @@ create_symlink() {
 }
 
 # List of files and directories to symlink
-DOTFILES=(.zshrc .zprofile .vimrc .vim .config/nvim .config/ghostty .config/hypr .config/fontconfig)
+DOTFILES=(.zshrc .zprofile .vimrc .vim .config/nvim .config/ghostty .config/fontconfig .config/hypr .config/waybar)
 
 # Main configurations and run commands
 for dotfile in "${DOTFILES[@]}"; do
