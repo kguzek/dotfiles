@@ -1,10 +1,11 @@
 * {
-  font-family: JetBrainsMono, monospace;
+  font-family: ArimoNerdFont, monospace;
   font-size: 13px;
+  font-weight: 600;
 }
 
 window#waybar {
-  background-color: #1e1e2e;
+  background: @transparent;
   color: #cdd6f4;
 }
 
@@ -22,6 +23,7 @@ window#waybar {
 #battery,
 #network,
 #cpu,
-#memory {
+#memory,
+#tray {
   padding: 0 10px;
 }

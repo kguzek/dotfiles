@@ -1,19 +1,19 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 32,
+  "height": 36,
 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["clock"],
-  "modules-right": ["network", "battery", "cpu", "memory", "tray"],
+  "modules-right": ["network", "tray"],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
-    "all-outputs": true
+    "all-outputs": false
   },
 
   "clock": {
-    "format": "{:%H:%M}",
+    "format": "{:%Y-%m-%d   %H:%M}",
     "tooltip-format": "{:%A, %d %B %Y}"
   },
 
@@ -23,21 +23,7 @@
     "format-disconnected": "  Offline"
   },
 
-  "battery": {
-    "format": "{capacity}%",
-    "format-charging": " {capacity}%",
-    "format-full": "  {capacity}%"
-  },
-
-  "cpu": {
-    "format": "  {usage}%"
-  },
-
-  "memory": {
-    "format": "  {used}MB"
-  },
-
   "tray": {
-    "spacing": 10
+    "spacing": 15,
   }
 }
