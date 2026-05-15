@@ -15,10 +15,17 @@
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
 hl.monitor({
-	output = "",
-	mode = "preferred",
-	position = "auto",
-	scale = "auto",
+	output = "DP-1",
+	mode = "1920x1080@60",
+	position = "0x0",
+	scale = "1",
+})
+
+hl.monitor({
+	output = "DP-2",
+	mode = "1920x1080@239.76",
+	position = "1920x0",
+	scale = "1",
 })
 
 ---------------------
@@ -39,11 +46,11 @@ local menu = "hyprlauncher"
 -- Autostart necessary processes (like notifications daemons, status bars, etc.)
 -- Or execute your favorite apps at launch like this:
 --
--- hl.on("hyprland.start", function ()
---   hl.exec_cmd(terminal)
---   hl.exec_cmd("nm-applet")
---   hl.exec_cmd("waybar & hyprpaper & firefox")
--- end)
+hl.on("hyprland.start", function()
+	--   hl.exec_cmd(terminal)
+	--   hl.exec_cmd("nm-applet")
+	hl.exec_cmd("waybar & hyprpaper")
+end)
 
 -------------------------------
 ---- ENVIRONMENT VARIABLES ----
