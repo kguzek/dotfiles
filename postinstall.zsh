@@ -30,6 +30,7 @@ script_path=${(%):-%x}
 script_dir=$(dirname "$script_path")
 install_path=$(realpath "$script_dir")
 DRY_RUN=false
+FORCE=false
 
 OMZ_CUSTOM_DIR='.oh-my-zsh/custom'
 ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
@@ -45,9 +46,12 @@ for arg in "$@"; do
     --dry-run)
       DRY_RUN=true
       ;;
+    --force)
+      FORCE=true
+      ;;
     *)
       echo "Unknown option: $arg"
-      echo "Usage: $0 [--dry-run]"
+      echo "Usage: $0 [--dry-run] [--force]"
       exit 1
       ;;
   esac
@@ -90,6 +94,10 @@ log_step() {
 
 is_dry_run() {
   [[ "$DRY_RUN" == true ]]
+}
+
+is_force() {
+  [[ "$FORCE" == true ]]
 }
 
 run_step() {
@@ -145,7 +153,11 @@ create_symlink() {
   local symlink_target="$1"
   local symlink_path="$2"
 
-  if [[ -L "$symlink_path" ]]; then
+  symlink_exists() {
+    [ -L "$symlink_path" ]
+  }
+
+  if symlink_exists; then
     local current_target
     current_target=$(readlink "$symlink_path")
 
@@ -155,10 +167,14 @@ create_symlink() {
     fi
   fi
 
-  # Backup existing file/dir/symlink if it exists
-  if [ -e "$symlink_path" ] || [ -L "$symlink_path" ]; then
-    local backup_filename="$symlink_path.bak.$(date +%s)"
-    run_step "back up $symlink_path" warn "Backed up existing path: $symlink_path -> $backup_filename" mv "$symlink_path" "$backup_filename"
+  # Handle existing file/dir/symlink
+  if [ -e "$symlink_path" ] || symlink_exists; then
+    if is_force && symlink_exists; then
+      run_step "remove conflicting symlink $symlink_path" warn "Removed conflicting symlink: $symlink_path" rm "$symlink_path"
+    else
+      local backup_filename="$symlink_path.bak.$(date +%s)"
+      run_step "back up $symlink_path" warn "Backed up existing path: $symlink_path -> $backup_filename" mv "$symlink_path" "$backup_filename"
+    fi
   fi
 
   # Ensure parent directories exist
