@@ -34,6 +34,11 @@ if [ -d "$LOCAL_SCRIPTS_PATH" ]; then
   export PATH="$LOCAL_SCRIPTS_PATH:$PATH"
 fi
 
+LOCAL_ZPROFILE_PATH="$HOME/.zprofile.local"
+if [ -f "$LOCAL_ZPROFILE_PATH" ]; then
+  source "$LOCAL_ZPROFILE_PATH"
+fi
+
 if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ] && command -v start-hyprland >/dev/null; then
   exec start-hyprland
 fi
