@@ -32,6 +32,18 @@ install_path=$(realpath "$script_dir")
 DRY_RUN=false
 FORCE=false
 
+print_help() {
+  cat <<'EOF'
+Usage: ./postinstall.zsh [options]
+
+Options:
+  --dry-run      Preview actions without changing files.
+  --force        Skip creating backups only for conflicting symlinks.
+                 Real files/directories are still backed up.
+  -h, --help     Show this help message and exit.
+EOF
+}
+
 OMZ_CUSTOM_DIR='.oh-my-zsh/custom'
 ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
 
@@ -49,9 +61,13 @@ for arg in "$@"; do
     --force)
       FORCE=true
       ;;
+    -h|--help)
+      print_help
+      exit 0
+      ;;
     *)
       echo "Unknown option: $arg"
-      echo "Usage: $0 [--dry-run] [--force]"
+      print_help
       exit 1
       ;;
   esac
