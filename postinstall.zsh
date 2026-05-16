@@ -95,6 +95,6 @@ for hook_file in "$install_path/hooks"/*.sh; do
 done
 
 end_time=$(date +%s.%N)
-elapsed=$(echo "($end_time - $start_time)" | bc -l)
+elapsed=$(($end_time - $start_time))
 printf "✓ Configuration complete in %.3f s!\n" "$elapsed"
 
