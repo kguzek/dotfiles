@@ -1,11 +1,7 @@
 #!/usr/bin/env zsh
 
 set -e
-setopt nullglob
 start_time=$(date +%s.%N)
-script_path=${(%):-%x}
-script_dir=$(dirname "$script_path")
-install_path=$(realpath "$script_dir")
 
 # Output formatting
 if [[ -t 1 ]]; then
@@ -22,13 +18,48 @@ else
   C_RED=''
 fi
 
+if [ "$(basename "$SHELL")" != "zsh" ]; then
+  echo "Please set zsh as your default shell before running this script."
+  echo "Current default shell: $SHELL"
+  echo "If you have already done this, you might need to log out and log back in."
+  exit 1
+fi
+
+setopt nullglob
+script_path=${(%):-%x}
+script_dir=$(dirname "$script_path")
+install_path=$(realpath "$script_dir")
+DRY_RUN=false
+
+OMZ_CUSTOM_DIR='.oh-my-zsh/custom'
+ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
+
+# Plugins to clone/update into $ZSH_CUSTOM/plugins
+PLUGIN_REPOS=(zsh-users/zsh-autosuggestions zsh-users/zsh-syntax-highlighting)
+
+# List of files and directories to symlink
+DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .config/nvim .config/ghostty .config/fontconfig .config/hypr .config/waybar)
+
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run)
+      DRY_RUN=true
+      ;;
+    *)
+      echo "Unknown option: $arg"
+      echo "Usage: $0 [--dry-run]"
+      exit 1
+      ;;
+  esac
+done
+
 log_step() {
   local level="$1"
   local message="$2"
   local prefix color
 
   case "$level" in
-    added)
+    changed)
       prefix='[+]'
       color="$C_GREEN"
       ;;
@@ -36,11 +67,11 @@ log_step() {
       prefix='[✓]'
       color="$C_GREEN"
       ;;
-    backup)
+    warn)
       prefix='[!]'
       color="$C_YELLOW"
       ;;
-    present)
+    unchanged)
       prefix='[=]'
       color="$C_BLUE"
       ;;
@@ -57,29 +88,33 @@ log_step() {
   printf '%b%s%b %s\n' "$color" "$prefix" "$C_RESET" "$message"
 }
 
-run_or_fail() {
-  local description="$1"
-  shift
+is_dry_run() {
+  [[ "$DRY_RUN" == true ]]
+}
 
-  if "$@"; then
+run_step() {
+  local action="$1"
+  local level="$2"
+  local success_message="$3"
+  shift 3
+
+  if is_dry_run; then
+    log_step "$level" "Would $action"
     return 0
   fi
 
-  log_step failed "$description"
+  if "$@"; then
+    if [ -n "$success_message" ]; then
+      log_step "$level" "$success_message"
+    fi
+    return 0
+  fi
+
+  log_step failed "Failed to $action"
   return 1
 }
 
-if [ "$(basename "$SHELL")" != "zsh" ]; then
-  echo "Please set zsh as your default shell before running this script."
-  echo "Current default shell: $SHELL"
-  echo "If you have already done this, you might need to log out and log back in."
-  exit 1
-fi
-
-OMZ_CUSTOM_DIR='.oh-my-zsh/custom'
-ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
-
-clone_plugin() {
+ensure_plugin() {
   local repo=$1
   local repo_name=$(basename "$repo" .git)
   local repo_url="https://github.com/$repo"
@@ -88,27 +123,23 @@ clone_plugin() {
   if [[ -d "$destination/.git" ]]; then
     (
       cd "$destination" || return 1
-      run_or_fail "Failed to fetch updates for plugin $repo_name" git fetch --quiet
+      # check for updates in dry run as well
+      DRY_RUN=false run_step "fetch updates for plugin $repo_name" unchanged "Checking for updates for plugin $repo_name" git fetch --quiet
 
       local local_ref remote_ref
       local_ref=$(git rev-parse @)
       remote_ref=$(git rev-parse @{u})
 
       if [[ $local_ref != $remote_ref ]]; then
-        run_or_fail "Failed to update plugin $repo_name" git pull --ff-only
-        log_step added "Updated plugin $repo_name"
+        run_step "update plugin $repo_name" changed "Updated plugin $repo_name" git pull --ff-only
       else
-        log_step present "Plugin $repo_name already configured (up to date)"
+        log_step unchanged "Plugin $repo_name already configured (up to date)"
       fi
     )
   else
-    run_or_fail "Failed to clone plugin $repo_name" git clone "$repo_url" "$destination"
-    log_step added "Added plugin $repo_name"
+    run_step "clone plugin $repo_name" changed "Added plugin $repo_name" git clone "$repo_url" "$destination"
   fi
 }
-
-clone_plugin "zsh-users/zsh-autosuggestions"
-clone_plugin "zsh-users/zsh-syntax-highlighting"
 
 create_symlink() {
   local symlink_target="$1"
@@ -119,7 +150,7 @@ create_symlink() {
     current_target=$(readlink "$symlink_path")
 
     if [[ "$current_target" == "$symlink_target" ]]; then
-      log_step present "Symlink already configured: $symlink_path -> $symlink_target"
+      log_step unchanged "Symlink already configured: $symlink_path -> $symlink_target"
       return
     fi
   fi
@@ -127,20 +158,22 @@ create_symlink() {
   # Backup existing file/dir/symlink if it exists
   if [ -e "$symlink_path" ] || [ -L "$symlink_path" ]; then
     local backup_filename="$symlink_path.bak.$(date +%s)"
-    run_or_fail "Failed to back up $symlink_path" mv "$symlink_path" "$backup_filename"
-    log_step backup "Backed up existing path: $symlink_path -> $backup_filename"
+    run_step "back up $symlink_path" warn "Backed up existing path: $symlink_path -> $backup_filename" mv "$symlink_path" "$backup_filename"
   fi
 
   # Ensure parent directories exist
-  run_or_fail "Failed to create parent directory for $symlink_path" mkdir -p "$(dirname "$symlink_path")"
+  parent_dir=$(dirname "$symlink_path")
+  if [ ! -d "$parent_dir" ]; then
+    run_step "create directory $parent_dir" changed "Created directory $parent_dir" mkdir -p "$parent_dir"
+  fi
 
   # Create the symlink
-  run_or_fail "Failed to create symlink: $symlink_path -> $symlink_target" ln -sn "$symlink_target" "$symlink_path"
-  log_step added "Created symlink: $symlink_path -> $symlink_target"
+  run_step "create symlink: $symlink_path -> $symlink_target" changed "Created symlink: $symlink_path -> $symlink_target" ln -sn "$symlink_target" "$symlink_path"
 }
 
-# List of files and directories to symlink
-DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .config/nvim .config/ghostty .config/fontconfig .config/hypr .config/waybar)
+for plugin in "${PLUGIN_REPOS[@]}"; do
+  ensure_plugin "$plugin"
+done
 
 # Main configurations and run commands
 for dotfile in "${DOTFILES[@]}"; do
@@ -154,12 +187,17 @@ for custom_file in "$OMZ_CUSTOM_DIR"/*.zsh; do
 done
 
 # Git hooks (for automatic reconfiguration on pull)
-for hook_file in "$install_path/hooks"/*.sh; do
+for hook_path in "$install_path/hooks"/*.sh; do
+  hook_file=$(basename "$hook_path")
   hook_name=$(basename "$hook_file" .sh)
-  create_symlink "$hook_file" "$install_path/.git/hooks/$hook_name"
+  create_symlink "../../hooks/$hook_file" "$install_path/.git/hooks/$hook_name"
 done
 
 end_time=$(date +%s.%N)
 elapsed=$(($end_time - $start_time))
 printf -v elapsed_fmt '%.3f' "$elapsed"
-log_step complete "Configuration complete in ${elapsed_fmt}s"
+if is_dry_run; then
+  log_step complete "Dry run complete in ${elapsed_fmt}s (no filesystem changes made)"
+else
+  log_step complete "Configuration complete in ${elapsed_fmt}s"
+fi
