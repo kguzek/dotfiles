@@ -7,6 +7,68 @@ script_path=${(%):-%x}
 script_dir=$(dirname "$script_path")
 install_path=$(realpath "$script_dir")
 
+# Output formatting
+if [[ -t 1 ]]; then
+  C_RESET=$'\e[0m'
+  C_GREEN=$'\e[32m'
+  C_YELLOW=$'\e[33m'
+  C_BLUE=$'\e[34m'
+  C_RED=$'\e[31m'
+else
+  C_RESET=''
+  C_GREEN=''
+  C_YELLOW=''
+  C_BLUE=''
+  C_RED=''
+fi
+
+log_step() {
+  local level="$1"
+  local message="$2"
+  local prefix color
+
+  case "$level" in
+    added)
+      prefix='[+]'
+      color="$C_GREEN"
+      ;;
+    complete)
+      prefix='[✓]'
+      color="$C_GREEN"
+      ;;
+    backup)
+      prefix='[!]'
+      color="$C_YELLOW"
+      ;;
+    present)
+      prefix='[=]'
+      color="$C_BLUE"
+      ;;
+    failed)
+      prefix='[x]'
+      color="$C_RED"
+      ;;
+    *)
+      prefix='[?]'
+      color="$C_YELLOW"
+      ;;
+  esac
+
+  printf '%b%s%b %s\n' "$color" "$prefix" "$C_RESET" "$message"
+}
+
+run_or_fail() {
+  local description="$1"
+  shift
+
+  if "$@"; then
+    return 0
+  fi
+
+  log_step failed "$description"
+  return 1
+}
+
 if [ "$(basename "$SHELL")" != "zsh" ]; then
   echo "Please set zsh as your default shell before running this script."
   echo "Current default shell: $SHELL"
@@ -24,21 +86,24 @@ clone_plugin() {
   local destination="$ZSH_CUSTOM/plugins/$repo_name"
 
   if [[ -d "$destination/.git" ]]; then
-    echo -n "✓ Plugin $repo_name already exists, checking for updates... "
     (
-      cd "$destination" || return
-      git fetch --quiet
-      LOCAL=$(git rev-parse @)
-      REMOTE=$(git rev-parse @{u})
-      if [[ $LOCAL != $REMOTE ]]; then
-        echo "update available!"
-        git pull --ff-only
+      cd "$destination" || return 1
+      run_or_fail "Failed to fetch updates for plugin $repo_name" git fetch --quiet
+
+      local local_ref remote_ref
+      local_ref=$(git rev-parse @)
+      remote_ref=$(git rev-parse @{u})
+
+      if [[ $local_ref != $remote_ref ]]; then
+        run_or_fail "Failed to update plugin $repo_name" git pull --ff-only
+        log_step added "Updated plugin $repo_name"
       else
-        echo "up to date!"
+        log_step present "Plugin $repo_name already configured (up to date)"
       fi
     )
   else
-    git clone "$repo_url" "$destination"
+    run_or_fail "Failed to clone plugin $repo_name" git clone "$repo_url" "$destination"
+    log_step added "Added plugin $repo_name"
   fi
 }
 
@@ -54,7 +119,7 @@ create_symlink() {
     current_target=$(readlink "$symlink_path")
 
     if [[ "$current_target" == "$symlink_target" ]]; then
-      echo "✓ Symlink $symlink_path -> $symlink_target already exists, skipping creation"
+      log_step present "Symlink already configured: $symlink_path -> $symlink_target"
       return
     fi
   fi
@@ -62,16 +127,16 @@ create_symlink() {
   # Backup existing file/dir/symlink if it exists
   if [ -e "$symlink_path" ] || [ -L "$symlink_path" ]; then
     local backup_filename="$symlink_path.bak.$(date +%s)"
-    mv "$symlink_path" "$backup_filename"
-    echo "✓ Backed up $symlink_path to $backup_filename"
+    run_or_fail "Failed to back up $symlink_path" mv "$symlink_path" "$backup_filename"
+    log_step backup "Backed up existing path: $symlink_path -> $backup_filename"
   fi
 
   # Ensure parent directories exist
-  mkdir -p "$(dirname "$symlink_path")"
+  run_or_fail "Failed to create parent directory for $symlink_path" mkdir -p "$(dirname "$symlink_path")"
 
   # Create the symlink
-  ln -sn "$symlink_target" "$symlink_path"
-  echo "✓ Created symlink: $symlink_path -> $symlink_target"
+  run_or_fail "Failed to create symlink: $symlink_path -> $symlink_target" ln -sn "$symlink_target" "$symlink_path"
+  log_step added "Created symlink: $symlink_path -> $symlink_target"
 }
 
 # List of files and directories to symlink
@@ -90,11 +155,11 @@ done
 
 # Git hooks (for automatic reconfiguration on pull)
 for hook_file in "$install_path/hooks"/*.sh; do
-  local hook_name=$(basename "$hook_file" .sh)
+  hook_name=$(basename "$hook_file" .sh)
   create_symlink "$hook_file" "$install_path/.git/hooks/$hook_name"
 done
 
 end_time=$(date +%s.%N)
 elapsed=$(($end_time - $start_time))
-printf "✓ Configuration complete in %.3f s!\n" "$elapsed"
-
+printf -v elapsed_fmt '%.3f' "$elapsed"
+log_step complete "Configuration complete in ${elapsed_fmt}s"
