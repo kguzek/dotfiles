@@ -40,6 +40,7 @@ local options = {
     javascriptreact = biome_or_prettier,
     typescriptreact = biome_or_prettier,
     json = biome_or_prettier,
+    jsonc = biome_or_prettier,
 
     css = prettier,
     html = prettier,

@@ -3,33 +3,37 @@
   "position": "top",
   "height": 36,
 
-  "modules-left": ["hyprland/workspaces"],
+  "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
   "modules-right": ["hyprland/language", "network", "tray"],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
-    "all-outputs": false
+    "all-outputs": false,
+  },
+
+  "hyprland/window": {
+    "separate-outputs": true,
   },
 
   "clock": {
     "format": "{:%Y-%m-%d   %H:%M}",
-    "tooltip-format": "{:%A, %d %B %Y}"
+    "tooltip-format": "{:%A, %d %B %Y}",
   },
 
   "hyprland/language": {
     "format": "{}",
     "format-pl": "PL",
-    "format-en": "GB"
+    "format-en": "GB",
   },
 
   "network": {
     "format-wifi": "  {signalStrength}%",
     "format-ethernet": "󰈀  Connected",
-    "format-disconnected": "  Offline"
+    "format-disconnected": "  Offline",
   },
 
   "tray": {
-    "spacing": 15
-  }
+    "spacing": 15,
+  },
 }
