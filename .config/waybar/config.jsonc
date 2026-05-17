@@ -1,7 +1,7 @@
 {
   "layer": "top",
   "position": "top",
-  "height": 36,
+  "height": 40,
 
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
@@ -10,6 +10,15 @@
   "hyprland/workspaces": {
     "disable-scroll": true,
     "all-outputs": false,
+    "format": "{icon} {windows}",
+    "format-window-separator": "",
+    "workspace-taskbar": {
+      "enable": true,
+      "update-active-window": false,
+      "format": "{icon}",
+      "icon-size": 18,
+      "on-click-window": "focus-window {address} {button}",
+    },
   },
 
   "hyprland/window": {
