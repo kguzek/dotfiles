@@ -51,7 +51,10 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
 PLUGIN_REPOS=(zsh-users/zsh-autosuggestions zsh-users/zsh-syntax-highlighting)
 
 # List of files and directories to symlink
-DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .config/nvim .config/ghostty .config/fontconfig .config/hypr .config/waybar .config/satty)
+DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim)
+
+# Each directory listed below will create a symlink to each of its children
+DOTFILE_DIRS=(.config)
 
 for arg in "$@"; do
   case "$arg" in
@@ -203,19 +206,31 @@ create_symlink() {
   run_step "create symlink: $symlink_path -> $symlink_target" changed "Created symlink: $symlink_path -> $symlink_target" ln -sn "$symlink_target" "$symlink_path"
 }
 
+create_symlinks() {
+  for dotfile in "$@"; do
+    create_symlink "$install_path/$dotfile" "$HOME/$dotfile"
+  done
+}
+
 for plugin in "${PLUGIN_REPOS[@]}"; do
   ensure_plugin "$plugin"
 done
 
 # Main configurations and run commands
-for dotfile in "${DOTFILES[@]}"; do
-  create_symlink "$install_path/$dotfile" "$HOME/$dotfile"
+create_symlinks "${DOTFILES[@]}"
+
+for dotfile_dir in "${DOTFILE_DIRS[@]}"; do
+  items=("$script_dir/$dotfile_dir"/*)
+  basenames=("${items[@]##*/}")
+  targets=("${basenames[@]/#/$dotfile_dir/}")
+
+  create_symlinks "${targets[@]}"
 done
 
 # Additional zsh configuration files, such as global aliases
-for custom_file in "$OMZ_CUSTOM_DIR"/*.zsh; do
+for custom_file in "$install_path/$OMZ_CUSTOM_DIR"/*.zsh; do
   # Allow configuration of a different OMZ custom path via ZSH_CUSTOM
-  create_symlink "$install_path/$custom_file" "$ZSH_CUSTOM/$(basename "$custom_file")"
+  create_symlink "$custom_file" "$ZSH_CUSTOM/$(basename "$custom_file")"
 done
 
 # Git hooks (for automatic reconfiguration on pull)
