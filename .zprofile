@@ -29,7 +29,7 @@ if [ -d "$HOME/.bun" ]; then
 fi
 
 # Local scripts
-LOCAL_SCRIPTS_PATH="$HOME/scripts/$(hostname -s)"
+LOCAL_SCRIPTS_PATH="$HOME/repos/scripts/$(hostname -s)"
 if [ -d "$LOCAL_SCRIPTS_PATH" ]; then
   export PATH="$LOCAL_SCRIPTS_PATH:$PATH"
 fi
