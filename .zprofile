@@ -28,6 +28,15 @@ if [ -d "$HOME/.bun" ]; then
   export PATH="$BUN_INSTALL/bin:$PATH"
 fi
 
+# Go
+GOPATH="$HOME/go"
+if [ -d "$GOPATH" ]; then
+  export GOPATH
+  export GOBIN="$GOPATH/bin"
+  export PATH="$GOBIN:$PATH"
+fi
+
+
 # Local scripts
 LOCAL_SCRIPTS_PATH="$HOME/repos/scripts/$(hostname -s)"
 if [ -d "$LOCAL_SCRIPTS_PATH" ]; then
