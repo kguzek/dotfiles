@@ -20,10 +20,8 @@ window#waybar {
 }
 
 #clock,
-#battery,
+#language,
 #network,
-#cpu,
-#memory,
 #tray {
   padding: 0 10px;
 }

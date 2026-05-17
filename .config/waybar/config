@@ -5,7 +5,7 @@
 
   "modules-left": ["hyprland/workspaces"],
   "modules-center": ["clock"],
-  "modules-right": ["network", "tray"],
+  "modules-right": ["hyprland/language", "network", "tray"],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -17,6 +17,12 @@
     "tooltip-format": "{:%A, %d %B %Y}"
   },
 
+  "hyprland/language": {
+    "format": "{}",
+    "format-pl": "PL",
+    "format-en": "GB"
+  },
+
   "network": {
     "format-wifi": "  {signalStrength}%",
     "format-ethernet": "󰈀  Connected",
@@ -24,6 +30,6 @@
   },
 
   "tray": {
-    "spacing": 15,
+    "spacing": 15
   }
 }
