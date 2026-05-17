@@ -1,0 +1,14 @@
+# vim: ft=dosini
+
+background-color=#282a36
+text-color=#eeeeee
+border-color=#1a1a1a
+
+[urgency=low]
+border-color=#595959
+
+[urgency=normal]
+border-color=#19e6cc
+
+[urgency=high]
+border-color=#ff5555
