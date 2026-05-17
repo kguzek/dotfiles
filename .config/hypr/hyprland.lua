@@ -38,11 +38,13 @@ local fileManager = "dolphin"
 local menu = "hyprlauncher"
 local browser = "firefox"
 local lockscreen = "hyprlock"
-local screenshot =
-	"slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
+local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
+local screenshotSelect = "slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | " .. screenshotEditor
+local screenshotFull = "grim - | " .. screenshotEditor
 -- https://codeberg.org/kguzek/waymoji
 local emojiPicker =
 	"~/repos/waymoji/waymoji.fish -- --background-color=1f1f1fdd --text-color=eeeeeedd --border-color=aaaaaaaa --prompt-color=eeeeeeaa --input-color=ffffffff"
+local colorPicker = "hyprpicker --autocopy --notify --lowercase-hex --radius=60 --scale=6.0"
 
 -------------------
 ---- AUTOSTART ----
@@ -263,7 +265,7 @@ local mainMod = "SUPER" -- Sets "Windows" key as main modifier
 
 -- Example binds, see https://wiki.hypr.land/Configuring/Basics/Binds/ for more
 hl.bind(mainMod .. " + Q", hl.dsp.exec_cmd(terminal))
-local closeWindowBind = hl.bind(mainMod .. " + C", hl.dsp.window.close())
+hl.bind(mainMod .. " + W", hl.dsp.window.close())
 -- closeWindowBind:set_enabled(false)
 hl.bind(
 	mainMod .. " + M",
@@ -276,8 +278,10 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(lockscreen))
-hl.bind("Print", hl.dsp.exec_cmd(screenshot))
+hl.bind("Print", hl.dsp.exec_cmd(screenshotSelect))
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(screenshotFull))
 hl.bind(mainMod .. " + semicolon", hl.dsp.exec_cmd(emojiPicker))
+hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(colorPicker))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
