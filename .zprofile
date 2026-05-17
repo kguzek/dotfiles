@@ -36,6 +36,11 @@ if [ -d "$GOPATH" ]; then
   export PATH="$GOBIN:$PATH"
 fi
 
+# Ruby
+RUBY_GEM_BIN_PATH=("$HOME/.local/share/gem/ruby"/*/bin)
+if [ -d "$RUBY_GEM_BIN_PATH" ]; then
+  export PATH="$RUBY_GEM_BIN_PATH:$PATH"
+fi
 
 # Local scripts
 LOCAL_SCRIPTS_PATH="$HOME/repos/scripts/$(hostname -s)"
