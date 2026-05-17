@@ -51,7 +51,7 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
 PLUGIN_REPOS=(zsh-users/zsh-autosuggestions zsh-users/zsh-syntax-highlighting)
 
 # List of files and directories to symlink
-DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .config/nvim .config/ghostty .config/fontconfig .config/hypr .config/waybar)
+DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .config/nvim .config/ghostty .config/fontconfig .config/hypr .config/waybar .config/satty)
 
 for arg in "$@"; do
   case "$arg" in

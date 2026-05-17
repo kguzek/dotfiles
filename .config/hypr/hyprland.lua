@@ -227,7 +227,7 @@ hl.config({
 		kb_options = "grp:win_space_toggle",
 		kb_rules = "",
 
-		follow_mouse = 1,
+		follow_mouse = 0,
 
 		sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
 
@@ -271,6 +271,12 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(lockscreen))
+hl.bind(
+	"Print",
+	hl.dsp.exec_cmd(
+		"slurp -d -b '#101010a0' -c '#dddddda0' -F monospace | grim -g - - | satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
+	)
+)
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
