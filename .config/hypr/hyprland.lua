@@ -38,6 +38,9 @@ local fileManager = "dolphin"
 local menu = "hyprlauncher"
 local browser = "firefox"
 local lockscreen = "hyprlock"
+-- https://codeberg.org/kguzek/waymoji
+local emojiPicker =
+	"~/repos/waymoji/waymoji.fish -- --background-color=1f1f1fdd --text-color=eeeeeedd --border-color=aaaaaaaa --prompt-color=eeeeeeaa --input-color=ffffffff"
 
 -------------------
 ---- AUTOSTART ----
@@ -277,6 +280,7 @@ hl.bind(
 		"slurp -d -b '#101010a0' -c '#dddddda0' -F monospace | grim -g - - | satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
 	)
 )
+hl.bind(mainMod .. " + semicolon", hl.dsp.exec_cmd(emojiPicker))
 
 -- Move focus with mainMod + arrow keys
 hl.bind(mainMod .. " + left", hl.dsp.focus({ direction = "left" }))
