@@ -34,7 +34,7 @@ hl.monitor({
 
 -- Set programs that you use
 local terminal = "ghostty"
-local fileManager = "dolphin"
+local fileManager = "kitty -e spf"
 local menu = "hyprlauncher"
 local browser = "firefox"
 local lockscreen = "hyprlock"
