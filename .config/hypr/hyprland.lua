@@ -35,7 +35,7 @@ hl.monitor({
 -- Set programs that you use
 local terminal = "ghostty"
 local menu = "hyprlauncher"
-local browser = "firefox"
+local browser = "zen-browser"
 local lockscreen = "hyprlock"
 local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
 local screenshotSelect = "slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | " .. screenshotEditor
