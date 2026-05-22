@@ -38,8 +38,8 @@
 
   "network": {
     "format-wifi": "  {signalStrength}%",
-    "format-ethernet": "󰈀  Connected",
-    "format-disconnected": "  Offline",
+    "format-ethernet": "󰈀",
+    "format-disconnected": "",
   },
 
   "tray": {
