@@ -278,6 +278,7 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(lockscreen))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd(lockscreen .. " & disown && systemctl suspend"))
 hl.bind("Print", hl.dsp.exec_cmd(screenshotSelect))
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(screenshotFull))
 hl.bind(mainMod .. " + semicolon", hl.dsp.exec_cmd(emojiPicker))
