@@ -1,11 +1,14 @@
 # vim: ft=dosini
 
-background-color=#282a36
+background-color=#212121
 text-color=#eeeeee
 border-color=#1a1a1a
+border-radius=10
+padding=8,4,14
+text-alignment=center
 
 [urgency=low]
-border-color=#595959
+border-color=#464646
 
 [urgency=normal]
 border-color=#19e6cc
