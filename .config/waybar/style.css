@@ -20,6 +20,7 @@ window#waybar {
   color: #1e1e2e;
 }
 
+#workspaces,
 #window,
 #clock,
 #language,
