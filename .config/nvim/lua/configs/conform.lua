@@ -45,6 +45,7 @@ local options = {
     css = prettier,
     html = prettier,
     markdown = prettier,
+    mdx = prettier,
     yaml = prettier,
 
     python = {
