@@ -1,5 +1,13 @@
 # Login-only environment setup
 
+typeset -U path
+
+_add_to_path() {
+  if [ -d "$1" ]; then
+    path+=("$1")
+  fi
+}
+
 # Homebrew
 HOMEBREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
 if [ -e "$HOMEBREW_PATH" ]; then
@@ -7,35 +15,34 @@ if [ -e "$HOMEBREW_PATH" ]; then
 fi
 
 # asdf shims
-export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+_add_to_path "${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
 
 # Android SDK
 export ANDROID_HOME="$HOME/Android/Sdk"
-export PATH="$ANDROID_HOME/platform-tools:$PATH"
+_add_to_path "$ANDROID_HOME/platform-tools"
 
 # Coursier
-export PATH="$PATH:$HOME/.local/share/coursier/bin"
+_add_to_path "$HOME/.local/share/coursier/bin"
 
 # Opencode
-export PATH="$PATH:$HOME/.opencode/bin"
+_add_to_path "$HOME/.opencode/bin"
 
 # Snap
-export PATH="$PATH:/snap/bin"
+_add_to_path "/snap/bin"
 
 # Bun
 if [ -d "$HOME/.bun" ]; then
   export BUN_INSTALL="$HOME/.bun"
-  export PATH="$BUN_INSTALL/bin:$PATH"
+  path+=("$BUN_INSTALL/bin")
 fi
 
 # pnpm
 PNPM_HOME="$HOME/.local/share/pnpm"
 if [ -d "$PNPM_HOME" ]; then
   export PNPM_HOME
-  case ":$PATH:" in
-    *":$PNPM_HOME/bin:"*) ;;
-    *) export PATH="$PNPM_HOME/bin:$PATH" ;;
-  esac
+  # pnpm v10 uses "$PNPM_HOME" as the binary container, but v11 uses a `bin` subdirectory
+  # including both because different projects use different version of pnpm
+  path+=("$PNPM_HOME" "$PNPM_HOME/bin")
 fi
 
 # Go
@@ -43,23 +50,20 @@ GOPATH="$HOME/go"
 if [ -d "$GOPATH" ]; then
   export GOPATH
   export GOBIN="$GOPATH/bin"
-  export PATH="$GOBIN:$PATH"
+  path+=("$GOBIN")
 fi
 
 # Ruby
 RUBY_GEM_PATH="$HOME/.local/share/gem/ruby"
 if [ -d "$RUBY_GEM_PATH" ]; then
-  RUBY_GEM_BIN_PATH=("$RUBY_GEM_PATH"/*/bin)
-  if [ -d "$RUBY_GEM_BIN_PATH" ]; then
-    export PATH="$RUBY_GEM_BIN_PATH:$PATH"
-  fi
+  path+=("$RUBY_GEM_PATH"/*/bin(N))
 fi
 
 # Local scripts
 LOCAL_SCRIPTS_PATH="$HOME/repos/scripts/$(hostname -s)"
-if [ -d "$LOCAL_SCRIPTS_PATH" ]; then
-  export PATH="$LOCAL_SCRIPTS_PATH:$PATH"
-fi
+_add_to_path "$LOCAL_SCRIPTS_PATH"
+
+export PATH
 
 LOCAL_ZPROFILE_PATH="$HOME/.zprofile.local"
 if [ -f "$LOCAL_ZPROFILE_PATH" ]; then
