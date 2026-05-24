@@ -20,6 +20,11 @@ window#waybar {
   color: #1e1e2e;
 }
 
+#wireplumber {
+  min-width: 50px;
+  padding: 0 10px 0 5px;
+}
+
 #workspaces,
 #window,
 #clock,

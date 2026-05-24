@@ -5,7 +5,13 @@
 
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
-  "modules-right": ["hyprland/language", "network", "tray"],
+  "modules-right": [
+    "hyprland/language",
+    "wireplumber#sink",
+    "wireplumber#source",
+    "network",
+    "tray",
+  ],
 
   "hyprland/workspaces": {
     "disable-scroll": true,
@@ -34,6 +40,25 @@
     "format": "{}",
     "format-pl": "PL",
     "format-en": "GB",
+  },
+
+  "wireplumber#sink": {
+    "format": "{volume}% {icon}",
+    "format-muted": "",
+    "format-icons": ["", "", ""],
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+    // cycle-audio-device from https://github.com/kguzek/scripts
+    "on-click-right": "cycle-audio-device --sink",
+    "scroll-step": 1,
+  },
+
+  "wireplumber#source": {
+    "node-type": "Audio/Source",
+    "format": "{volume}% ",
+    "format-muted": "",
+    "on-click": "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle",
+    "on-click-right": "cycle-audio-device --source",
+    "scroll-step": 1,
   },
 
   "network": {
