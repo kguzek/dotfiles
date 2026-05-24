@@ -38,8 +38,11 @@ local menu = "hyprlauncher"
 local browser = "zen-browser"
 local lockscreen = "hyprlock"
 local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
-local screenshotSelect = "slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | " .. screenshotEditor
-local screenshotFull = "grim - | " .. screenshotEditor
+local screenshotSelectedArea = "slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | "
+local screenshotSelectAndCopy = screenshotSelectedArea
+	.. "wl-copy && notify-send --expire-time 5000 'Screenshot taken' 'Image copied to clipboard'"
+local screenshotSelectAndEdit = screenshotSelectedArea .. screenshotEditor
+local screenshotAndEdit = "grim - | " .. screenshotEditor
 -- https://codeberg.org/kguzek/waymoji
 local emojiPicker =
 	"~/repos/waymoji/waymoji.fish -- --background-color=1f1f1fdd --text-color=eeeeeedd --border-color=aaaaaaaa --prompt-color=eeeeeeaa --input-color=ffffffff"
@@ -281,8 +284,9 @@ hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(lockscreen))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd(lockscreen .. " & disown && systemctl suspend"))
-hl.bind("Print", hl.dsp.exec_cmd(screenshotSelect))
-hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(screenshotFull))
+hl.bind("Print", hl.dsp.exec_cmd(screenshotSelectAndCopy))
+hl.bind("SHIFT + Print", hl.dsp.exec_cmd(screenshotSelectAndEdit))
+hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(screenshotAndEdit))
 hl.bind(mainMod .. " + semicolon", hl.dsp.exec_cmd(emojiPicker))
 hl.bind(mainMod .. " + C", hl.dsp.exec_cmd(colorPicker))
 
