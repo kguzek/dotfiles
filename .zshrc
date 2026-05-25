@@ -79,15 +79,9 @@ plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
 
 # Cache completions aggressively
 autoload -Uz compinit
-if [[ "$(uname)" == "Darwin" ]]; then
-    comp_last=$(stat -f %m ~/.zcompdump 2>/dev/null || echo 0)
-    comp_today=$(date +%j)
-    comp_last_day=$(date -r "$comp_last" +%j)
-else
-    comp_last=$(stat -c %Y ~/.zcompdump 2>/dev/null || echo 0)
-    comp_today=$(date +%j)
-    comp_last_day=$(date -d "@$comp_last" +%j)
-fi
+comp_last=$(stat -c %Y ~/.zcompdump 2>/dev/null || echo 0)
+comp_today=$(date +%j)
+comp_last_day=$(date -d "@$comp_last" +%j)
 
 if [[ "$comp_today" == "$comp_last_day" ]]; then
     compinit -C
