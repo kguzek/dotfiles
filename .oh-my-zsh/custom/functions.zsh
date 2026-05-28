@@ -32,3 +32,14 @@ function grc() {
 
   git clone "git@github.com:$author/$repo.git" && cd "$repo"
 }
+
+# Remove empty directories recursively
+function rmdirs() {
+  if [ -z "$1" ]; then
+    local dir="."
+  else
+    local dir="$1"
+  fi
+
+  find "$dir" -type d -empty -delete
+}
