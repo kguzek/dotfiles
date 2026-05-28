@@ -35,11 +35,29 @@ function grc() {
 
 # Remove empty directories recursively
 function rmdirs() {
-  if [ -z "$1" ]; then
-    local dir="."
-  else
-    local dir="$1"
+  local dry_run=0
+  local dir="."
+  local args=()
+
+  for arg in "$@"; do
+    case "$arg" in
+      --dry-run|-r)
+        dry_run=1
+        ;;
+      *)
+        args+=("$arg")
+        ;;
+    esac
+  done
+
+  # first non-flag argument becomes directory (if provided)
+  if [[ ${#args[@]} -gt 0 ]]; then
+    dir="${args[1]}"
   fi
 
-  find "$dir" -type d -empty -delete
+  if (( dry_run )); then
+    find "$dir" -type d -empty 2>/dev/null
+  else
+    find "$dir" -type d -empty -delete 2>/dev/null
+  fi
 }
