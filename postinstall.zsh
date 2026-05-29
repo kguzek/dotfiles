@@ -2,18 +2,20 @@
 
 set -e
 
+SCRIPTS_REPO_PATH="$HOME/repos/scripts"
+
 typeset -U path
-path+=("$HOME/repos/scripts/common")
+path+=("$SCRIPTS_REPO_PATH/common")
 for required_command in log-status time-script; do
   if command -v "$required_command" >/dev/null 2>&1; then
     continue
   fi
 
   echo "[x] Missing required command: $required_command" >&2
-  echo '[x] Install the scripts repo and ensure ~/repos/scripts/common is on PATH:' >&2
+  echo "[x] Install the scripts repo and ensure $SCRIPTS_REPO_PATH/common is on PATH:" >&2
   echo >&2
   echo 'mkdir -p ~/repos' >&2
-  echo 'git clone git@github.com:kguzek/scripts.git ~/repos/scripts' >&2
+  echo "git clone git@github.com:kguzek/scripts.git $SCRIPTS_REPO_PATH" >&2
   exit 1
 done
 
@@ -46,6 +48,7 @@ EOF
 }
 
 OMZ_CUSTOM_DIR='.oh-my-zsh/custom'
+ZSH="${ZSH:-"$HOME/.oh-my-zsh"}"
 ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
 
 # Plugins to clone/update into $ZSH_CUSTOM/plugins
@@ -107,6 +110,32 @@ run_step() {
   return 1
 }
 
+update_git_repo() {
+  local destination="$1"
+  local subject="$2"
+  local success_message="$3"
+  local unchanged_message="$4"
+
+  (
+    cd "$destination" || return 1
+    # Check for updates in dry run as well so the status is accurate.
+    log-status info "Checking for updates for $subject"
+    if ! git fetch --quiet; then
+      log-status failed "Failed to fetch updates for $subject"
+    fi
+
+    local local_ref remote_ref
+    local_ref=$(git rev-parse @)
+    remote_ref=$(git rev-parse @{u})
+
+    if [[ $local_ref != $remote_ref ]]; then
+      run_step "update $subject" changed "$success_message" git pull --ff-only
+    else
+      log-status unchanged "$unchanged_message"
+    fi
+  )
+}
+
 ensure_plugin() {
   local repo=$1
   local repo_name=$(basename "$repo" .git)
@@ -114,21 +143,7 @@ ensure_plugin() {
   local destination="$ZSH_CUSTOM/plugins/$repo_name"
 
   if [[ -d "$destination/.git" ]]; then
-    (
-      cd "$destination" || return 1
-      # check for updates in dry run as well
-      DRY_RUN=false run_step "fetch updates for plugin $repo_name" unchanged "Checking for updates for plugin $repo_name" git fetch --quiet
-
-      local local_ref remote_ref
-      local_ref=$(git rev-parse @)
-      remote_ref=$(git rev-parse @{u})
-
-      if [[ $local_ref != $remote_ref ]]; then
-        run_step "update plugin $repo_name" changed "Updated plugin $repo_name" git pull --ff-only
-      else
-        log-status unchanged "Plugin $repo_name already configured (up to date)"
-      fi
-    )
+    update_git_repo "$destination" "plugin $repo_name" "Updated plugin $repo_name" "Plugin $repo_name is up to date"
   else
     run_step "clone plugin $repo_name" changed "Added plugin $repo_name" git clone "$repo_url" "$destination"
   fi
@@ -177,6 +192,9 @@ create_symlinks() {
     create_symlink "$install_path/$dotfile" "$HOME/$dotfile"
   done
 }
+
+update_git_repo "$ZSH" "oh-my-zsh" "Updated oh-my-zsh" "oh-my-zsh is up to date"
+update_git_repo "$SCRIPTS_REPO_PATH" "scripts" "Updated scripts" "Scripts are up to date"
 
 for plugin in "${PLUGIN_REPOS[@]}"; do
   ensure_plugin "$plugin"
