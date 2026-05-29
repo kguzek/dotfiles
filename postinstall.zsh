@@ -1,22 +1,23 @@
 #!/usr/bin/env zsh
 
 set -e
-start_time=$(date +%s.%N)
 
-# Output formatting
-if [[ -t 1 ]]; then
-  C_RESET=$'\e[0m'
-  C_GREEN=$'\e[32m'
-  C_YELLOW=$'\e[33m'
-  C_BLUE=$'\e[34m'
-  C_RED=$'\e[31m'
-else
-  C_RESET=''
-  C_GREEN=''
-  C_YELLOW=''
-  C_BLUE=''
-  C_RED=''
-fi
+typeset -U path
+path+=("$HOME/repos/scripts/common")
+for required_command in log-status time-script; do
+  if command -v "$required_command" >/dev/null 2>&1; then
+    continue
+  fi
+
+  echo "[x] Missing required command: $required_command" >&2
+  echo '[x] Install the scripts repo and ensure ~/repos/scripts/common is on PATH:' >&2
+  echo >&2
+  echo 'mkdir -p ~/repos' >&2
+  echo 'git clone git@github.com:kguzek/scripts.git ~/repos/scripts' >&2
+  exit 1
+done
+
+source <(time-script --start)
 
 if [ "$(basename "$SHELL")" != "zsh" ]; then
   echo "Please set zsh as your default shell before running this script."
@@ -76,41 +77,6 @@ for arg in "$@"; do
   esac
 done
 
-log_step() {
-  local level="$1"
-  local message="$2"
-  local prefix color
-
-  case "$level" in
-    changed)
-      prefix='[+]'
-      color="$C_GREEN"
-      ;;
-    complete)
-      prefix='[✓]'
-      color="$C_GREEN"
-      ;;
-    warn)
-      prefix='[!]'
-      color="$C_YELLOW"
-      ;;
-    unchanged)
-      prefix='[=]'
-      color="$C_BLUE"
-      ;;
-    failed)
-      prefix='[x]'
-      color="$C_RED"
-      ;;
-    *)
-      prefix='[?]'
-      color="$C_YELLOW"
-      ;;
-  esac
-
-  printf '%b%s%b %s\n' "$color" "$prefix" "$C_RESET" "$message"
-}
-
 is_dry_run() {
   [[ "$DRY_RUN" == true ]]
 }
@@ -126,18 +92,18 @@ run_step() {
   shift 3
 
   if is_dry_run; then
-    log_step "$level" "Would $action"
+    log-status "$level" "Would $action"
     return 0
   fi
 
   if "$@"; then
     if [ -n "$success_message" ]; then
-      log_step "$level" "$success_message"
+      log-status "$level" "$success_message"
     fi
     return 0
   fi
 
-  log_step failed "Failed to $action"
+  log-status failed "Failed to $action"
   return 1
 }
 
@@ -160,7 +126,7 @@ ensure_plugin() {
       if [[ $local_ref != $remote_ref ]]; then
         run_step "update plugin $repo_name" changed "Updated plugin $repo_name" git pull --ff-only
       else
-        log_step unchanged "Plugin $repo_name already configured (up to date)"
+        log-status unchanged "Plugin $repo_name already configured (up to date)"
       fi
     )
   else
@@ -181,7 +147,7 @@ create_symlink() {
     current_target=$(readlink "$symlink_path")
 
     if [[ "$current_target" == "$symlink_target" ]]; then
-      log_step unchanged "Symlink already configured: $symlink_path -> $symlink_target"
+      log-status unchanged "Symlink already configured: $symlink_path -> $symlink_target"
       return
     fi
   fi
@@ -240,11 +206,8 @@ for hook_path in "$install_path/hooks"/*.sh; do
   create_symlink "../../hooks/$hook_file" "$install_path/.git/hooks/$hook_name"
 done
 
-end_time=$(date +%s.%N)
-elapsed=$(($end_time - $start_time))
-printf -v elapsed_fmt '%.3f' "$elapsed"
 if is_dry_run; then
-  log_step complete "Dry run complete in ${elapsed_fmt}s (no filesystem changes made)"
+  log-status complete "Dry run complete in $(time-script --end)s (no filesystem changes made)"
 else
-  log_step complete "Configuration complete in ${elapsed_fmt}s"
+  log-status complete "Configuration complete in $(time-script --end)s"
 fi
