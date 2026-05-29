@@ -59,10 +59,6 @@ if [ -d "$RUBY_GEM_PATH" ]; then
   path+=("$RUBY_GEM_PATH"/*/bin(N))
 fi
 
-# Local scripts
-LOCAL_SCRIPTS_PATH="$HOME/repos/scripts/$(hostname -s)"
-_add_to_path "$LOCAL_SCRIPTS_PATH"
-
 export PATH
 
 LOCAL_ZPROFILE_PATH="$HOME/.zprofile.local"
