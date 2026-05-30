@@ -122,12 +122,12 @@ run_step() {
 
 update_git_repo() {
   local destination="$1"
-  local subject="$2"
-  local success_message="$3"
-  local unchanged_message="$4"
 
   (
     cd "$destination" || return 1
+    local remote_name="$(git remote | head -1)"
+    local repo_url="$(git remote get-url "$remote_name")"
+    local subject="$(basename "$repo_url" .git)"
     # Check for updates in dry run as well so the status is accurate.
     log-status info "Checking for updates for $subject"
     if ! git fetch --quiet; then
@@ -144,9 +144,9 @@ update_git_repo() {
         GIT_CONFIG_KEY_0=core.hooksPath
         GIT_CONFIG_VALUE_0=/dev/null
       fi
-      run_step "update $subject" changed "$success_message" git pull --ff-only
+      run_step "update $subject" changed "Updated $subject" git pull --ff-only
     else
-      log-status unchanged "$unchanged_message"
+      log-status unchanged "Repository $subject is up to date"
     fi
   )
 }
@@ -158,7 +158,7 @@ ensure_plugin() {
   local destination="$ZSH_CUSTOM/plugins/$repo_name"
 
   if [[ -d "$destination/.git" ]]; then
-    update_git_repo "$destination" "plugin $repo_name" "Updated plugin $repo_name" "Plugin $repo_name is up to date"
+    update_git_repo "$destination"
   else
     run_step "clone plugin $repo_name" changed "Added plugin $repo_name" git clone "$repo_url" "$destination"
   fi
@@ -209,10 +209,10 @@ create_symlinks() {
 }
 
 if ! is_skip_self_update; then
-  SKIP_GIT_HOOKS=true update_git_repo "$install_path" "dotfiles" "Updated dotfiles" "dotfiles are up to date"
+  SKIP_GIT_HOOKS=true update_git_repo "$install_path"
 fi
-update_git_repo "$ZSH" "oh-my-zsh" "Updated oh-my-zsh" "oh-my-zsh is up to date"
-update_git_repo "$SCRIPTS_REPO_PATH" "scripts" "Updated scripts" "Scripts are up to date"
+update_git_repo "$ZSH"
+update_git_repo "$SCRIPTS_REPO_PATH"
 
 for plugin in "${PLUGIN_REPOS[@]}"; do
   ensure_plugin "$plugin"
