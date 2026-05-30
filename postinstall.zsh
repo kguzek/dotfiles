@@ -34,6 +34,7 @@ script_dir=$(dirname "$script_path")
 install_path=$(realpath "$script_dir")
 DRY_RUN=false
 FORCE=false
+SKIP_SELF_UPDATE=false
 
 print_help() {
   cat <<'EOF'
@@ -43,6 +44,8 @@ Options:
   --dry-run      Preview actions without changing files.
   --force        Skip creating backups only for conflicting symlinks.
                  Real files/directories are still backed up.
+  --skip-self-update
+                 Skip updating the dotfiles repo itself.
   -h, --help     Show this help message and exit.
 EOF
 }
@@ -68,6 +71,9 @@ for arg in "$@"; do
     --force)
       FORCE=true
       ;;
+    --skip-self-update)
+      SKIP_SELF_UPDATE=true
+      ;;
     -h|--help)
       print_help
       exit 0
@@ -86,6 +92,10 @@ is_dry_run() {
 
 is_force() {
   [[ "$FORCE" == true ]]
+}
+
+is_skip_self_update() {
+  [[ "$SKIP_SELF_UPDATE" == true ]]
 }
 
 run_step() {
@@ -193,6 +203,9 @@ create_symlinks() {
   done
 }
 
+if ! is_skip_self_update; then
+  update_git_repo "$install_path" "dotfiles" "Updated dotfiles" "dotfiles are up to date"
+fi
 update_git_repo "$ZSH" "oh-my-zsh" "Updated oh-my-zsh" "oh-my-zsh is up to date"
 update_git_repo "$SCRIPTS_REPO_PATH" "scripts" "Updated scripts" "Scripts are up to date"
 
