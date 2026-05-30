@@ -139,6 +139,11 @@ update_git_repo() {
     remote_ref=$(git rev-parse @{u})
 
     if [[ $local_ref != $remote_ref ]]; then
+      if [[ "$SKIP_GIT_HOOKS" == true ]]; then
+        GIT_CONFIG_COUNT=1
+        GIT_CONFIG_KEY_0=core.hooksPath
+        GIT_CONFIG_VALUE_0=/dev/null
+      fi
       run_step "update $subject" changed "$success_message" git pull --ff-only
     else
       log-status unchanged "$unchanged_message"
@@ -204,7 +209,7 @@ create_symlinks() {
 }
 
 if ! is_skip_self_update; then
-  update_git_repo "$install_path" "dotfiles" "Updated dotfiles" "dotfiles are up to date"
+  SKIP_GIT_HOOKS=true update_git_repo "$install_path" "dotfiles" "Updated dotfiles" "dotfiles are up to date"
 fi
 update_git_repo "$ZSH" "oh-my-zsh" "Updated oh-my-zsh" "oh-my-zsh is up to date"
 update_git_repo "$SCRIPTS_REPO_PATH" "scripts" "Updated scripts" "Scripts are up to date"
