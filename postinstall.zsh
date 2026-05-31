@@ -2,6 +2,7 @@
 
 set -e
 
+export UPDATING_DOTFILES=true
 SCRIPTS_REPO_PATH="$HOME/repos/scripts"
 
 typeset -U path
@@ -19,19 +20,22 @@ for required_command in log-status time-script; do
   exit 1
 done
 
-source <(time-script --start)
-
 if [ "$(basename "$SHELL")" != "zsh" ]; then
-  echo "Please set zsh as your default shell before running this script."
-  echo "Current default shell: $SHELL"
-  echo "If you have already done this, you might need to log out and log back in."
+  log-status failed "Please set zsh as your default shell before running this script."
+  log-status failed "Current default shell: $SHELL"
+  log-status info "If you have already done this, you might need to log out and log back in. Otherwise, consult chsh(1)."
   exit 1
 fi
+
+source <(time-script --start)
 
 setopt nullglob
 script_path=${(%):-%x}
 script_dir=$(dirname "$script_path")
 install_path=$(realpath "$script_dir")
+DOTFILES_UPDATE_SENTINEL=$(git -C "$install_path" rev-parse --path-format=absolute --git-path postinstall-updating)
+touch "$DOTFILES_UPDATE_SENTINEL"
+trap 'rm -f "$DOTFILES_UPDATE_SENTINEL"' EXIT
 DRY_RUN=false
 FORCE=false
 SKIP_SELF_UPDATE=false
@@ -139,11 +143,6 @@ update_git_repo() {
     remote_ref=$(git rev-parse @{u})
 
     if [[ $local_ref != $remote_ref ]]; then
-      if [[ "$SKIP_GIT_HOOKS" == true ]]; then
-        GIT_CONFIG_COUNT=1
-        GIT_CONFIG_KEY_0=core.hooksPath
-        GIT_CONFIG_VALUE_0=/dev/null
-      fi
       run_step "update $subject" changed "Updated $subject" git pull --ff-only
     else
       log-status unchanged "Repository $subject is up to date"
@@ -208,10 +207,6 @@ create_symlinks() {
   done
 }
 
-update_self_repo() {
-  SKIP_GIT_HOOKS=true update_git_repo "$install_path"
-}
-
 queue_job() {
   ("$@") &
   update_job_pids+=($!)
@@ -235,7 +230,7 @@ update_job_pids=()
 update_job_descriptions=()
 
 if ! is_skip_self_update; then
-  queue_job update_self_repo
+  queue_job update_git_repo "$install_path"
 fi
 
 queue_job update_git_repo "$ZSH"
