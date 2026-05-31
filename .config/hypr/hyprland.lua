@@ -279,6 +279,7 @@ hl.bind(
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("discord"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("element-desktop --password-store=gnome-libsecret"))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
