@@ -208,15 +208,46 @@ create_symlinks() {
   done
 }
 
-if ! is_skip_self_update; then
+update_self_repo() {
   SKIP_GIT_HOOKS=true update_git_repo "$install_path"
+}
+
+queue_job() {
+  ("$@") &
+  update_job_pids+=($!)
+  update_job_descriptions+=("$*")
+}
+
+wait_for_jobs() {
+  local failed=0
+
+  for i in {1..${#update_job_pids[@]}}; do
+    if ! wait "${update_job_pids[$i]}"; then
+      log-status failed "Failed to process ${update_job_descriptions[$i]}"
+      failed=1
+    fi
+  done
+
+  return $failed
+}
+
+update_job_pids=()
+update_job_descriptions=()
+
+if ! is_skip_self_update; then
+  queue_job update_self_repo
 fi
-update_git_repo "$ZSH"
-update_git_repo "$SCRIPTS_REPO_PATH"
+
+queue_job update_git_repo "$ZSH"
+queue_job update_git_repo "$SCRIPTS_REPO_PATH"
 
 for plugin in "${PLUGIN_REPOS[@]}"; do
-  ensure_plugin "$plugin"
+  queue_job ensure_plugin "$plugin"
 done
+
+if ! wait_for_jobs; then
+  exit 1
+fi
 
 # Main configurations and run commands
 create_symlinks "${DOTFILES[@]}"
