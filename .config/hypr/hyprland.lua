@@ -36,7 +36,6 @@ hl.monitor({
 local terminal = "ghostty"
 local menu = "hyprlauncher"
 local browser = "zen-browser"
-local lockscreen = "hyprlock"
 local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
 local screenshotSelectedArea = "slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | "
 local screenshotSelectAndCopy = screenshotSelectedArea
@@ -64,6 +63,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("hyprpaper")
 	hl.exec_cmd(terminal, { monitor = "DP-2" })
 	hl.exec_cmd("systemctl --user start hyprpolkitagent")
+	hl.exec_cmd("hypridle")
 end)
 
 -------------------------------
@@ -283,8 +283,8 @@ hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("element-desktop --password-store=gno
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
-hl.bind(mainMod .. " + L", hl.dsp.exec_cmd(lockscreen))
-hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd(lockscreen .. " & disown && systemctl suspend"))
+hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("loginctl lock-session"))
+hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend"))
 hl.bind("Print", hl.dsp.exec_cmd(screenshotSelectAndCopy))
 hl.bind("SHIFT + Print", hl.dsp.exec_cmd(screenshotSelectAndEdit))
 hl.bind(mainMod .. " + Print", hl.dsp.exec_cmd(screenshotAndEdit))
