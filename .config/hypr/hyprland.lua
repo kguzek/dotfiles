@@ -14,6 +14,15 @@
 ------------------
 
 -- See https://wiki.hypr.land/Configuring/Basics/Monitors/
+-- Laptop builtin monitor
+hl.monitor({
+	output = "eDP-1",
+	mode = "1920x1080@60",
+	position = "0x0",
+	scale = "1",
+})
+
+-- External monitor (left)
 hl.monitor({
 	output = "DP-1",
 	mode = "1920x1080@60",
@@ -21,6 +30,7 @@ hl.monitor({
 	scale = "1",
 })
 
+-- External monitor (right)
 hl.monitor({
 	output = "DP-2",
 	mode = "1920x1080@239.76",
@@ -57,7 +67,7 @@ local colorPicker = "hyprpicker --autocopy --notify --lowercase-hex --radius=60 
 -- Or execute your favorite apps at launch like this:
 --
 hl.on("hyprland.start", function()
-	--   hl.exec_cmd("nm-applet")
+	hl.exec_cmd("nm-applet")
 	hl.exec_cmd(menu .. " -d")
 	hl.exec_cmd("waybar")
 	hl.exec_cmd("hyprpaper")
