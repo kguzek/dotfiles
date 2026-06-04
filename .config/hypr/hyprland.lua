@@ -244,13 +244,12 @@ hl.config({
 hl.config({
 	input = {
 		kb_layout = "pl,gb",
-		kb_variant = "",
+		kb_variant = ",pl",
 		kb_model = "",
-		kb_options = "grp:win_space_toggle",
+		kb_options = "grp:win_space_toggle,caps:escape",
 		kb_rules = "",
 
 		follow_mouse = 0,
-
 		sensitivity = 0, -- -1.0 - 1.0, 0 means no modification.
 
 		touchpad = {
