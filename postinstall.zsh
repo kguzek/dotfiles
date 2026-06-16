@@ -27,7 +27,7 @@ if [ "$(basename "$SHELL")" != "zsh" ]; then
   exit 1
 fi
 
-source <(time-script --start)
+time-script --start
 
 setopt nullglob
 script_path=${(%):-%x}
