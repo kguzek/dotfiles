@@ -56,6 +56,7 @@ local screenshotAndEdit = "grim - | " .. screenshotEditor
 local emojiPicker =
 	"~/repos/waymoji/waymoji.fish -- --background-color=1f1f1fdd --text-color=eeeeeedd --border-color=aaaaaaaa --prompt-color=eeeeeeaa --input-color=ffffffff"
 local colorPicker = "hyprpicker --autocopy --notify --lowercase-hex --radius=60 --scale=6.0"
+local element = "element-desktop --password-store=gnome-libsecret"
 
 -------------------
 ---- AUTOSTART ----
@@ -75,6 +76,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd(terminal, { monitor = "DP-2" })
 	hl.exec_cmd("systemctl --user start hyprpolkitagent")
 	hl.exec_cmd("hypridle")
+	hl.exec_cmd(element .. " --hidden")
 end)
 
 hl.on("hyprland.shutdown", function()
@@ -296,7 +298,7 @@ hl.bind(
 hl.bind(mainMod .. " + B", hl.dsp.exec_cmd(browser))
 hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("discord"))
-hl.bind(mainMod .. " + E", hl.dsp.exec_cmd("element-desktop --password-store=gnome-libsecret"))
+hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(element))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
