@@ -75,7 +75,7 @@ DISABLE_MAGIC_FUNCTIONS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 export NVM_LAZY=1
-plugins=(git zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git colored-man-pages zsh-autosuggestions zsh-syntax-highlighting)
 
 # Cache completions aggressively
 autoload -Uz compinit
