@@ -46,7 +46,7 @@ hl.monitor({
 local terminal = "ghostty"
 local menu = "hyprlauncher"
 local browser = "zen-browser"
-local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/Pictures/screenshots/%Y%m%d_%H%M%S.png'"
+local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/pictures/screenshots/%Y%m%d_%H%M%S.png'"
 local screenshotSelectedArea = "slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | "
 local screenshotSelectAndCopy = screenshotSelectedArea
 	.. "wl-copy && notify-send --expire-time 5000 'Screenshot taken' 'Image copied to clipboard'"
@@ -67,6 +67,7 @@ local colorPicker = "hyprpicker --autocopy --notify --lowercase-hex --radius=60 
 -- Or execute your favorite apps at launch like this:
 --
 hl.on("hyprland.start", function()
+	hl.exec_cmd("systemctl --user start hyprland-session.target")
 	hl.exec_cmd("nm-applet")
 	hl.exec_cmd(menu .. " -d")
 	hl.exec_cmd("waybar")
@@ -74,6 +75,12 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd(terminal, { monitor = "DP-2" })
 	hl.exec_cmd("systemctl --user start hyprpolkitagent")
 	hl.exec_cmd("hypridle")
+end)
+
+hl.on("hyprland.shutdown", function()
+	-- uses a blocking exec function and sleeps a bit to give things time to close
+	-- you might also want to kill troublesome/crashing non-systemd background services here:
+	-- os.execute("pkill wallpaperthing; systemctl --user stop hyprland-session.target && sleep 0.1")
 end)
 
 -------------------------------
