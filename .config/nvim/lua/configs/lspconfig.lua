@@ -1,6 +1,7 @@
 local nvchad_lspconfig = require "nvchad.configs.lspconfig"
 
 local lua_lsp_plugins_path = "~/.local/share/lua-lsp-plugins"
+local hyprland_stub = "/usr/share/hypr/stubs/hl.meta.lua"
 
 -- detect Factorio mod root
 local function is_factorio_mod(fname)
@@ -10,12 +11,22 @@ local function is_factorio_mod(fname)
   })[1]
 end
 
--- conditionally add Lua libraries for Factorio modding
+local function is_hyprland_config(fname)
+  return vim.fs.basename(fname) == "hyprland.lua"
+end
+
+-- override for conditional Lua libraries
 local function on_init(client)
   local fname = vim.api.nvim_buf_get_name(0)
 
+  -- Factorio modding
   if is_factorio_mod(fname) then
     table.insert(client.config.settings.Lua.workspace.library, vim.fn.expand(lua_lsp_plugins_path))
+  end
+
+  -- Hyprland config
+  if is_hyprland_config(fname) then
+    table.insert(client.config.settings.Lua.workspace.library, hyprland_stub)
   end
 
   nvchad_lspconfig.on_init(client)
