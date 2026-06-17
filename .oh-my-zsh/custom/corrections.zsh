@@ -1,18 +1,3 @@
-correct-on-space() {
-  case "$BUFFER" in
-    *(docker|podman)' compoes')
-      BUFFER="${BUFFER%compoes}compose"
-       ;;
-  esac
-  zle self-insert
-}
-
-
-
-correct-on-slash() {
-  zle self-insert
-}
-
 correct-on-both() {
   case "$BUFFER" in
     */reops)
@@ -22,13 +7,26 @@ correct-on-both() {
       BUFFER="${BUFFER%samab}samba"
        ;;
   esac
+}
+
+correct-on-space() {
+  correct-on-both
+  case "$BUFFER" in
+    *(docker|podman)' compoes')
+      BUFFER="${BUFFER%compoes}compose"
+       ;;
+  esac
+  zle magic-space
+}
+
+
+
+correct-on-slash() {
+  correct-on-both
   zle self-insert
 }
 
 zle -N correct-on-space
 zle -N correct-on-slash
-zle -N correct-on-both
 bindkey ' ' correct-on-space
 bindkey '/' correct-on-slash
-bindkey ' ' correct-on-both
-bindkey '/' correct-on-both
