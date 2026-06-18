@@ -15,6 +15,10 @@ correct-on-space() {
     *(docker|podman)' compoes')
       BUFFER="${BUFFER%compoes}compose"
        ;;
+    vi)
+      BUFFER="nvim"
+      CURSOR=${#BUFFER} # update cursor position when buffer length changes
+      ;;
   esac
   zle magic-space
 }
