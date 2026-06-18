@@ -6,4 +6,4 @@ alias ls='ls --color=auto'
 alias get="curl --fail --no-progress-meter --location --write-out '\n'"
 alias rsync="rsync --archive --verbose --exclude=.DS_Store"
 alias ud='~/repos/dotfiles/postinstall.zsh'
-
+alias mip='get ifconfig.me'
