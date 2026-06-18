@@ -5,7 +5,6 @@ function gpm() {
   if [ "$branch" = "$main_branch" ]; then
     echo "Already on branch $main_branch."
   else
-    git fetch
     git pull --rebase # in case the feature branch was rebased via GitHub's UI
     git checkout "$main_branch"
     git pull --rebase
