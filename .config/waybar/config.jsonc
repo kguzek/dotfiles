@@ -6,6 +6,8 @@
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
   "modules-right": [
+    "custom/kuma-pi",
+    "custom/kuma-hp",
     "hyprland/language",
     "wireplumber#sink",
     "wireplumber#source",
@@ -34,6 +36,20 @@
   "clock": {
     "format": "{:%Y-%m-%d   %H:%M}",
     "tooltip-format": "{:%A, %d %B %Y}",
+  },
+
+  "custom/kuma-pi": {
+    "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-pi.env",
+    "interval": 60,
+    "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-pi.env",
+    "format": "Pi {} ",
+  },
+
+  "custom/kuma-hp": {
+    "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-hp.env",
+    "interval": 60,
+    "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-hp.env",
+    "format": "HP {} ",
   },
 
   "hyprland/language": {
