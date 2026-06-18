@@ -1,0 +1,18 @@
+# vim: ft=zsh
+
+# Git repository clone
+if [ -z "$1" ]; then
+  log-status failed "Usage: grc <repo> or <author/repo>"
+  return 1
+fi
+
+local repo="$1"
+local author="kguzek"
+
+# If input contains a slash, assume it's author/repo
+if [[ "$repo" == */* ]]; then
+  author="${repo%%/*}"
+  repo="${repo##*/}"
+fi
+
+git clone "git@github.com:$author/$repo.git" && cd "$repo"

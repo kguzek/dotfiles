@@ -45,12 +45,10 @@ print_help() {
 Usage: ./postinstall.zsh [options]
 
 Options:
-  --dry-run      Preview actions without changing files.
-  --force        Skip creating backups only for conflicting symlinks.
-                 Real files/directories are still backed up.
-  --skip-self-update
-                 Skip updating the dotfiles repo itself.
-  -h, --help     Show this help message and exit.
+  -n, --dry-run            Preview actions without changing files.
+  -f, --force              Skip creating backups only for conflicting symlinks. Real files/directories are still backed up.
+  -s, --skip-self-update   Skip updating the dotfiles repo itself.
+  -h, --help               Show this help message and exit.
 EOF
 }
 
@@ -69,7 +67,7 @@ DOTFILE_DIRS=(.config)
 
 for arg in "$@"; do
   case "$arg" in
-    --dry-run)
+    --dry-run|-n)
       DRY_RUN=true
       ;;
     --force)
@@ -256,7 +254,7 @@ for dotfile_dir in "${DOTFILE_DIRS[@]}"; do
 done
 
 # Additional zsh configuration files, such as global aliases
-for custom_file in "$install_path/$OMZ_CUSTOM_DIR"/*.zsh; do
+for custom_file in "$install_path/$OMZ_CUSTOM_DIR"/*; do
   # Allow configuration of a different OMZ custom path via ZSH_CUSTOM
   create_symlink "$custom_file" "$ZSH_CUSTOM/$(basename "$custom_file")"
 done

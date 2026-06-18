@@ -75,7 +75,9 @@ DISABLE_MAGIC_FUNCTIONS="true"
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 export NVM_LAZY=1
-plugins=(git colored-man-pages zsh-autosuggestions zsh-syntax-highlighting)
+VI_MODE_SET_CURSOR=true
+VI_MODE_CURSOR_INSERT=5
+plugins=(git colored-man-pages vi-mode zsh-autosuggestions zsh-syntax-highlighting)
 
 # Cache completions aggressively
 autoload -Uz compinit
@@ -184,6 +186,11 @@ fi
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
 fi
+
+# Custom functions
+for custom_function in "$ZSH_CUSTOM/functions"/*; do
+  autoload -U "$(basename "$custom_function")"
+done
 
 LOCAL_ZSHRC_PATH="$HOME/.zshrc.local"
 if [ -f "$LOCAL_ZSHRC_PATH" ]; then
