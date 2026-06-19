@@ -12,6 +12,7 @@
     "wireplumber#sink",
     "wireplumber#source",
     "network",
+    "custom/mako",
     "tray",
   ],
 
@@ -81,6 +82,20 @@
     "format-wifi": "  {signalStrength}%",
     "format-ethernet": "󰈀",
     "format-disconnected": "",
+  },
+
+  "custom/mako": {
+    "exec": "if makoctl mode | grep -qx do-not-disturb; then printf '{\"alt\":\"activated\"}\\n'; else printf '{\"alt\":\"deactivated\"}\\n'; fi",
+    "return-type": "json",
+    "interval": 1,
+    "on-click": "makoctl mode -t do-not-disturb",
+    "format": "{icon}",
+    "format-icons": {
+      "activated": " ",
+      "deactivated": " ",
+    },
+    "tooltip": true,
+    "tooltip-format": "Toggle do not disturb mode for notifications",
   },
 
   "tray": {
