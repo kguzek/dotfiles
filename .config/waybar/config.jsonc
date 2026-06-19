@@ -41,14 +41,14 @@
 
   "custom/kuma-pi": {
     "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-pi.env",
-    "interval": 60,
+    "interval": 15,
     "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-pi.env",
     "format": "Pi {} ",
   },
 
   "custom/kuma-hp": {
     "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-hp.env",
-    "interval": 60,
+    "interval": 15,
     "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-hp.env",
     "format": "HP {} ",
   },
