@@ -7,3 +7,14 @@ vim.opt.foldlevel = 20
 vim.opt.foldcolumn = "auto:9"
 
 vim.o.cursorlineopt = "both"
+vim.filetype.add {
+  extension = {
+    caddy = "caddy",
+  },
+  filename = {
+    Caddyfile = "caddy",
+  },
+  pattern = {
+    ["Caddyfile%w*"] = "caddy",
+  },
+}

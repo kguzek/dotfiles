@@ -14,6 +14,9 @@ return {
       "python",
       "bash",
       "markdown",
+      "markdown_inline",
+      "caddy",
     },
+    auto_install = true,
   },
 }
