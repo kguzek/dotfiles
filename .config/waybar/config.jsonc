@@ -8,6 +8,7 @@
   "modules-right": [
     "custom/kuma-pi",
     "custom/kuma-hp",
+    "custom/kuma-wcss",
     "hyprland/language",
     "wireplumber#sink",
     "wireplumber#source",
@@ -51,6 +52,13 @@
     "interval": 15,
     "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-hp.env",
     "format": "HP {} ",
+  },
+
+  "custom/kuma-wcss": {
+    "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-wcss.env",
+    "interval": 15,
+    "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-wcss.env",
+    "format": "WCSS {} ",
   },
 
   "hyprland/language": {
