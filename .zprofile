@@ -59,12 +59,12 @@ if [ -d "$RUBY_GEM_PATH" ]; then
   path+=("$RUBY_GEM_PATH"/*/bin(N))
 fi
 
-export PATH
-
 LOCAL_ZPROFILE_PATH="$HOME/.zprofile.local"
 if [ -f "$LOCAL_ZPROFILE_PATH" ]; then
   source "$LOCAL_ZPROFILE_PATH"
 fi
+
+export PATH
 
 if [ -z "$DISPLAY" ] && [ -z "$WAYLAND_DISPLAY" ] && [ "$(tty)" = "/dev/tty1" ] && command -v start-hyprland >/dev/null; then
   exec start-hyprland
