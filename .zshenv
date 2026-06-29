@@ -9,6 +9,7 @@ _add_to_path() {
 VOLTA_HOME="$HOME/.volta"
 if [ -d "$VOLTA_HOME" ]; then
   export VOLTA_HOME
+  export VOLTA_FEATURE_PNPM=1
   path+=("$VOLTA_HOME/bin")
 fi
 
