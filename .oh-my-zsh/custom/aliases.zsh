@@ -8,4 +8,4 @@ alias rsync="rsync --archive --verbose --exclude=.DS_Store"
 alias ud='~/repos/dotfiles/postinstall.zsh'
 alias mip='get ifconfig.me'
 alias grbim='git rebase --interactive $(git_main_branch)'
-alias gpo='git remote prune origin'
+alias grpo='git remote prune origin'
