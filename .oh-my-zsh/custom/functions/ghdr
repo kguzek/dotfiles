@@ -1,0 +1,12 @@
+# vim: ft=zsh
+
+# GitHub Dependabot rebase
+gh pr list --json author,number |
+  jq '
+    .[]
+    | select(
+      .author.login == "app/dependabot"
+      )
+    | .number
+  ' |
+  xargs -L1 gh pr comment --body "@dependabot rebase"

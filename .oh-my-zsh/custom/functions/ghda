@@ -1,0 +1,18 @@
+# vim: ft=zsh
+
+# GitHub Dependabot approve
+gh pr list --json author,number,statusCheckRollup |
+  jq '
+    .[]
+    | select(
+      .author.login == "app/dependabot"
+      and (.statusCheckRollup
+        | all(
+          .status == "COMPLETED"
+          and (.conclusion == "SUCCESS" or .conclusion == "NEUTRAL")
+          )
+        )
+      )
+    | .number
+  ' |
+  xargs -L1 gh pr review --approve
