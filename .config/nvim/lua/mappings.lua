@@ -34,6 +34,9 @@ end
 
 -- map({ "n", "i", "v" }, "<C-s>", "<cmd> w <cr>")
 
+-- C source/header stubs
+map("n", "<leader>cs", require("c-stubs").create_stubs, { desc = "Create C source/header stubs" })
+
 -- LSP error lines
 map("", "<leader>l", require "toggle-error-lines", { desc = "Toggle lsp_lines" })
 map("", "<leader>;", vim.diagnostic.open_float, { desc = "Open error diagnostic float" })
