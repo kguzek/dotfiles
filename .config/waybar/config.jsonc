@@ -62,9 +62,8 @@
   },
 
   "hyprland/language": {
-    "format": "{}",
-    "format-pl": "PL",
-    "format-en": "GB",
+    "format": "{short}",
+    "on-click": "hyprctl switchxkblayout current next",
   },
 
   "wireplumber#sink": {
