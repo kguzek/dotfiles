@@ -28,8 +28,14 @@ window#waybar {
 #workspaces,
 #window,
 #clock,
-#language,
+#battery,
 #network,
+#custom-mako,
 #tray {
   padding: 0 10px;
+}
+
+#language {
+  /* double left padding to separate from kumas */
+  padding: 0 10px 0 20px;
 }
