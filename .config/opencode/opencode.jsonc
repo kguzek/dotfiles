@@ -10,5 +10,33 @@
   "plugin": ["@slkiser/opencode-quota"],
   "provider": {
     "openai": {},
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (Solvro)",
+      "options": {
+        "baseURL": "https://ollama.b.solvro.pl/v1",
+      },
+      "models": {
+        "gemma4:31b": {
+          // DO NOT USE: not enough VRAM
+          "name": "Gemma 4 31B",
+        },
+        "gemma4:e4b": {
+          "name": "Gemma 4 e4B",
+        },
+        "qwen2.5-coder:14b": {
+          "name": "Qwen2.5 Coder 14b",
+        },
+        "qwen3:14b": {
+          "name": "Qwen3 14b",
+        },
+        "ministral-3:3b": {
+          "name": "Ministral 3 3B",
+        },
+        "ministral-3:8b": {
+          "name": "Ministral 3 8B",
+        },
+      },
+    },
   },
 }
