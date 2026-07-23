@@ -75,12 +75,12 @@
         "mistral:7b": {
           "name": "Mistral 7B",
         },
-        // "mistral-nemo:12b": {
-        //   "name": "Mistral Nemo 12B",
-        // },
-        // "zephyr:7b": {
-        //   "name": "Zephyr 7B",
-        // },
+        "mistral-nemo:12b": {
+          "name": "Mistral Nemo 12B",
+        },
+        "zephyr:7b": {
+          "name": "Zephyr 7B",
+        },
         // "dolphin-mistral:7b": {
         //   "name": "Dolphin Mistral 7B",
         // },
