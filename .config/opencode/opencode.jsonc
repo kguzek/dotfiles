@@ -36,6 +36,27 @@
         "ministral-3:8b": {
           "name": "Ministral 3 8B",
         },
+        "ibm/granite4.1:8b": {
+          "name": "Granite 4.1 8B",
+        },
+        "rnj-1:8b": {
+          "name": "Rnj-1 8B",
+        },
+        "deepseek-r1:1.5b": {
+          "name": "DeepSeek R1 1.5b",
+        },
+        "deepseek-r1:7b": {
+          "name": "DeepSeek R1 7b",
+        },
+        "deepseek-r1:8b": {
+          "name": "DeepSeek R1 8b",
+        },
+        "deepseek-coder:1.3b": {
+          "name": "DeepSeek Coder 1.3b",
+        },
+        "deepseek-coder:6.7b": {
+          "name": "DeepSeek Coder 6.7b",
+        },
       },
     },
   },
