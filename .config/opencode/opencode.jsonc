@@ -51,6 +51,9 @@
         "deepseek-r1:8b": {
           "name": "DeepSeek R1 8B",
         },
+        "deepseek-r1:14b": {
+          "name": "DeepSeek R1 14B",
+        },
         "deepseek-coder:1.3b": {
           "name": "DeepSeek Coder 1.3B",
         },
@@ -78,14 +81,17 @@
         "mistral-nemo:12b": {
           "name": "Mistral Nemo 12B",
         },
-        "zephyr:7b": {
-          "name": "Zephyr 7B",
+        "mistrallite:7b": {
+          "name": "Mistrallite 7B",
         },
         "dolphin-mistral:7b": {
           "name": "Dolphin Mistral 7B",
         },
-        "mistrallite:7b": {
-          "name": "Mistrallite 7B",
+        "zephyr:7b": {
+          "name": "Zephyr 7B",
+        },
+        "llama3.1:8b": {
+          "name": "Llama 3.1 8B",
         },
         "llama3.2:1b": {
           "name": "Llama 3.2 1B",
@@ -93,8 +99,11 @@
         "llama3.2:3b": {
           "name": "Llama 3.2 3B",
         },
-        "llama3.1:8b": {
-          "name": "Llama 3.1 8B",
+        "ornith:9b-q4_K_M": {
+          "name": "Ornith 9B Q4",
+        },
+        "ornith:9b-q8_0": {
+          "name": "Ornith 9B Q8",
         },
       },
     },
