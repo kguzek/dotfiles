@@ -81,21 +81,21 @@
         "zephyr:7b": {
           "name": "Zephyr 7B",
         },
-        // "dolphin-mistral:7b": {
-        //   "name": "Dolphin Mistral 7B",
-        // },
-        // "mistrallite:7b": {
-        //   "name": "Mistrallite 7B",
-        // },
-        // "llama3.2:1b": {
-        //   "name": "Llama 3.2 1B",
-        // },
-        // "llama3.2:3b": {
-        //   "name": "Llama 3.2 3B",
-        // },
-        // "llama3.1:8b": {
-        //   "name": "Llama 3.1 8B",
-        // },
+        "dolphin-mistral:7b": {
+          "name": "Dolphin Mistral 7B",
+        },
+        "mistrallite:7b": {
+          "name": "Mistrallite 7B",
+        },
+        "llama3.2:1b": {
+          "name": "Llama 3.2 1B",
+        },
+        "llama3.2:3b": {
+          "name": "Llama 3.2 3B",
+        },
+        "llama3.1:8b": {
+          "name": "Llama 3.1 8B",
+        },
       },
     },
   },
