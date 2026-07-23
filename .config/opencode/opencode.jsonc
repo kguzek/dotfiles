@@ -63,18 +63,18 @@
         "deepseek-llm:7b": {
           "name": "DeepSeek LLM 7B",
         },
-        // "deepseek-v2:16b": {
-        //   "name": "DeepSeek V2 16B",
-        // },
-        // "openthinker:7b": {
-        //   "name": "OpenThinker 7B",
-        // },
-        // "glm4:9b": {
-        //   "name": "GLM-4 9B",
-        // },
-        // "mistral:7b": {
-        //   "name": "Mistral 7B",
-        // },
+        "deepseek-v2:16b": {
+          "name": "DeepSeek V2 16B",
+        },
+        "openthinker:7b": {
+          "name": "OpenThinker 7B",
+        },
+        "glm4:9b": {
+          "name": "GLM-4 9B",
+        },
+        "mistral:7b": {
+          "name": "Mistral 7B",
+        },
         // "mistral-nemo:12b": {
         //   "name": "Mistral Nemo 12B",
         // },
