@@ -17,18 +17,18 @@
         "baseURL": "https://ollama.b.solvro.pl/v1",
       },
       "models": {
-        "gemma4:31b": {
-          // DO NOT USE: not enough VRAM
-          "name": "Gemma 4 31B",
-        },
+        // DO NOT USE: not enough VRAM
+        // "gemma4:31b": {
+        //   "name": "Gemma 4 31B",
+        // },
         "gemma4:e4b": {
           "name": "Gemma 4 e4B",
         },
         "qwen2.5-coder:14b": {
-          "name": "Qwen2.5 Coder 14b",
+          "name": "Qwen2.5 Coder 14B",
         },
         "qwen3:14b": {
-          "name": "Qwen3 14b",
+          "name": "Qwen3 14B",
         },
         "ministral-3:3b": {
           "name": "Ministral 3 3B",
@@ -43,20 +43,59 @@
           "name": "Rnj-1 8B",
         },
         "deepseek-r1:1.5b": {
-          "name": "DeepSeek R1 1.5b",
+          "name": "DeepSeek R1 1.5B",
         },
         "deepseek-r1:7b": {
-          "name": "DeepSeek R1 7b",
+          "name": "DeepSeek R1 7B",
         },
         "deepseek-r1:8b": {
-          "name": "DeepSeek R1 8b",
+          "name": "DeepSeek R1 8B",
         },
         "deepseek-coder:1.3b": {
-          "name": "DeepSeek Coder 1.3b",
+          "name": "DeepSeek Coder 1.3B",
         },
         "deepseek-coder:6.7b": {
-          "name": "DeepSeek Coder 6.7b",
+          "name": "DeepSeek Coder 6.7B",
         },
+        "deepseek-coder-v2:16b": {
+          "name": "DeepSeek Coder V2 16B",
+        },
+        "deepseek-llm:7b": {
+          "name": "DeepSeek LLM 7B",
+        },
+        // "deepseek-v2:16b": {
+        //   "name": "DeepSeek V2 16B",
+        // },
+        // "openthinker:7b": {
+        //   "name": "OpenThinker 7B",
+        // },
+        // "glm4:9b": {
+        //   "name": "GLM-4 9B",
+        // },
+        // "mistral:7b": {
+        //   "name": "Mistral 7B",
+        // },
+        // "mistral-nemo:12b": {
+        //   "name": "Mistral Nemo 12B",
+        // },
+        // "zephyr:7b": {
+        //   "name": "Zephyr 7B",
+        // },
+        // "dolphin-mistral:7b": {
+        //   "name": "Dolphin Mistral 7B",
+        // },
+        // "mistrallite:7b": {
+        //   "name": "Mistrallite 7B",
+        // },
+        // "llama3.2:1b": {
+        //   "name": "Llama 3.2 1B",
+        // },
+        // "llama3.2:3b": {
+        //   "name": "Llama 3.2 3B",
+        // },
+        // "llama3.1:8b": {
+        //   "name": "Llama 3.1 8B",
+        // },
       },
     },
   },
