@@ -9,5 +9,8 @@
   },
   "plugin": [
     "@slkiser/opencode-quota"
-  ]
+  ],
+  "provider": {
+    "openai": {}
+  }
 }
