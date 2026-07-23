@@ -4,13 +4,11 @@
     "linear": {
       "type": "remote",
       "url": "https://mcp.linear.app/mcp",
-      "enabled": true
-    }
+      "enabled": true,
+    },
   },
-  "plugin": [
-    "@slkiser/opencode-quota"
-  ],
+  "plugin": ["@slkiser/opencode-quota"],
   "provider": {
-    "openai": {}
-  }
+    "openai": {},
+  },
 }
