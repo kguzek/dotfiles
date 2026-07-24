@@ -1,0 +1,9 @@
+# vim: ft=zsh
+
+# jq wrapper for json5/JSON with comments (jsonc)
+local filename
+if [ $# -gt 1 ]; then
+  filename="${@:$#}"
+  shift -p
+fi
+json5 "$filename" | jq --color-output "$@"
