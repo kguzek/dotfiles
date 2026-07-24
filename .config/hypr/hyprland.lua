@@ -275,11 +275,12 @@ hl.gesture({
 	action = "workspace",
 })
 
--- Example per-device config
+-- Per-device config
 -- See https://wiki.hypr.land/Configuring/Advanced-and-Cool/Devices/ for more
 hl.device({
-	name = "epic-mouse-v1",
-	sensitivity = -0.5,
+	name = "elan0518:00-04f3:31fc-touchpad",
+	sensitivity = -0.05,
+	accel_profile = "adaptive",
 })
 
 ---------------------
