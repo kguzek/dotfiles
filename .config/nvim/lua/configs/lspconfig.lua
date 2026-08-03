@@ -66,7 +66,8 @@ end
 
 lua_custom()
 
-local servers = { "html", "cssls", "ts_ls", "tailwindcss", "ruff", "basedpyright", "clangd" }
+vim.lsp.config("elixirls", { cmd = { "elixir-ls" } })
+local servers = { "html", "cssls", "ts_ls", "tailwindcss", "ruff", "basedpyright", "clangd", "elixirls" }
 vim.lsp.enable(servers)
 
 -- read :h vim.lsp.config for changing options of lsp servers

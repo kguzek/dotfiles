@@ -1,4 +1,5 @@
 local prettier = { "prettierd" }
+local elixir = { "elixir-ls" }
 
 local BIOME_CONFIG_FILENAMES = { "biome.json", "biome.jsonc" }
 
@@ -56,10 +57,14 @@ local options = {
 
     c = { "clang-format" },
     cpp = { "clang-format" },
+
+    elixir = elixir,
+    eelixir = elixir,
+    heex = elixir,
   },
 
   format_on_save = {
-    timeout_ms = 500,
+    timeout_ms = 1500,
     lsp_fallback = true,
   },
 }

@@ -30,6 +30,9 @@ _add_to_path "$HOME/.opencode/bin"
 # Snap
 _add_to_path "/snap/bin"
 
+# Mason
+_add_to_path "$HOME/.local/share/nvim/mason/bin"
+
 # Bun
 if [ -d "$HOME/.bun" ]; then
   export BUN_INSTALL="$HOME/.bun"

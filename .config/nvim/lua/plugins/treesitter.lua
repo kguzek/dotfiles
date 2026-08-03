@@ -16,6 +16,7 @@ return {
       "markdown",
       "markdown_inline",
       "caddy",
+      "elixir",
     },
     auto_install = true,
   },
