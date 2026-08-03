@@ -1,0 +1,14 @@
+# vim: ft=zsh
+
+# Generate Factorio LSP library bundle
+time-script --start
+log-status info "Generating new LSP bundle..."
+LUA_LSP_PLUGINS_DIR="$HOME/.local/share/lua-lsp-plugins"
+if [ -d "$LUA_LSP_PLUGINS_DIR" ]; then
+  rm -rf "$LUA_LSP_PLUGINS_DIR/factorio"
+else 
+  mkdir -p "$LUA_LSP_PLUGINS_DIR"
+fi
+npx -y factoriomod-debug docs
+mv factorio "$LUA_LSP_PLUGINS_DIR/factorio"
+log-status complete "LSP bundle generation complete in $(time-script --end)s"
