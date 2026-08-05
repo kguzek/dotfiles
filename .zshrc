@@ -183,8 +183,14 @@ if command -v direnv >/dev/null 2>&1; then
   eval "$(direnv hook zsh)"
 fi
 
+# fzf completions
 if command -v fzf >/dev/null 2>&1; then
   source <(fzf --zsh)
+fi
+
+# worktrunk completions
+if command -v wt >/dev/null 2>&1; then
+  eval "$(command wt config shell init zsh)"
 fi
 
 # Custom functions
@@ -196,3 +202,4 @@ LOCAL_ZSHRC_PATH="$HOME/.zshrc.local"
 if [ -f "$LOCAL_ZSHRC_PATH" ]; then
   source "$LOCAL_ZSHRC_PATH"
 fi
+
