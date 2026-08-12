@@ -125,6 +125,9 @@
         "ornith:9b-q8_0": {
           "name": "Ornith 9B Q8",
         },
+        "hf.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF:Q4_K_M": {
+          "name": "Qwythos 9B Claude Mythos 5 1M GGUF",
+        },
       },
     },
     // Detected copilot authentication; opencode-quota added this global provider declaration.
