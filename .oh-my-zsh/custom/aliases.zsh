@@ -5,9 +5,10 @@ alias rsync='rsync --archive --verbose --exclude=.DS_Store'
 alias glow='glow --pager'
 
 # custom commands and wrappers
-alias ud='~/repos/dotfiles/postinstall.zsh' # Update Dotfiles
+alias ud='~/repos/dotfiles/postinstall.zsh'         # Update Dotfiles
 alias get="curl --fail --location --write-out '\n'" # perform http GET
-alias mip='get ifconfig.me' # obtain My IP address
+alias mip='get ifconfig.me'                         # obtain My IP address
+alias wts='wt switch'                               # WorkTrunk Switch
 
 # custom git subcommand aliases
 alias gfp='git fetch --prune'
