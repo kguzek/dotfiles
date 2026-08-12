@@ -1,12 +1,6 @@
 # vim: ft=zsh
 
 # GitHub Dependabot rebase
-gh pr list --json author,number |
-  jq '
-    .[]
-    | select(
-      .author.login == "app/dependabot"
-      )
-    | .number
-  ' |
-  xargs -L1 gh pr comment --body "@dependabot rebase"
+gh pr list --state open --app dependabot --json number |
+  jq 'sort_by(.createdAt) | reverse | .[].number' |
+  xargs -L1 echo gh pr comment --body "@dependabot rebase"

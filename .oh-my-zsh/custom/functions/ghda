@@ -1,16 +1,16 @@
 # vim: ft=zsh
 
 # GitHub Dependabot approve
-gh pr list --json author,number,statusCheckRollup |
+gh pr list --state open --app dependabot --json number,statusCheckRollup |
   jq '
-    .[]
+    sort_by(.createdAt)
+    | reverse
+    | .[]
     | select(
-      .author.login == "app/dependabot"
-      and (.statusCheckRollup
+      .statusCheckRollup
         | all(
           .status == "COMPLETED"
           and (.conclusion == "SUCCESS" or .conclusion == "NEUTRAL")
-          )
         )
       )
     | .number
