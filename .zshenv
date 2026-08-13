@@ -20,8 +20,8 @@ fi
 
 # Local scripts
 LOCAL_SCRIPTS_ROOT="$HOME/repos/scripts"
-_add_to_path "$LOCAL_SCRIPTS_ROOT/common"
 _add_to_path "$LOCAL_SCRIPTS_ROOT/$(hostname -s)"
+_add_to_path "$LOCAL_SCRIPTS_ROOT/common"
 
 LOCAL_ZSHENV_PATH="$HOME/.zshenv.local"
 if [ -f "$LOCAL_ZSHENV_PATH" ]; then
