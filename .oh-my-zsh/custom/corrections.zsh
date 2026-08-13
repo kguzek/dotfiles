@@ -14,16 +14,14 @@ correct-on-space() {
   case "$BUFFER" in
     *(docker|podman)' compoes')
       BUFFER="${BUFFER%compoes}compose";;
-    vi)
-      BUFFER="nvim";;
-    ud)
-      BUFFER="update-dotfiles";;
+    vi|*' vi')
+      BUFFER="${BUFFER%vi}nvim";;
+    ud|*' ud')
+      BUFFER="${BUFFER%ud}update-dotfiles";;
   esac
   CURSOR=${#BUFFER} # update cursor position when buffer length changes
   zle magic-space
 }
-
-
 
 correct-on-slash() {
   correct-on-both

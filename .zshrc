@@ -132,7 +132,6 @@ source $ZSH/oh-my-zsh.sh
 
 export PATH="$PATH:/opt/nvim/bin"
 export EDITOR='nvim'
-alias vi=nvim
 
 # Lazy-loaded nvm
 export NVM_DIR="$HOME/.nvm"
