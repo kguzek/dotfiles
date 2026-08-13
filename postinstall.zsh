@@ -23,7 +23,7 @@ done
 if [ "$(basename "$SHELL")" != "zsh" ]; then
   log-status failed "Please set zsh as your default shell before running this script."
   log-status failed "Current default shell: $SHELL"
-  log-status info "If you have already done this, you might need to log out and log back in. Otherwise, consult chsh(1)."
+  log-status info "If you have already done this, you might need to log out and log back in. Otherwise, consult chsh(1)." >&2
   exit 1
 fi
 
