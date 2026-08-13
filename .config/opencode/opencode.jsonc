@@ -126,7 +126,10 @@
           "name": "Ornith 9B Q8",
         },
         "hf.co/empero-ai/Qwythos-9B-Claude-Mythos-5-1M-GGUF:Q4_K_M": {
-          "name": "Qwythos 9B Claude Mythos 5 1M GGUF",
+          "name": "Qwythos 9B Claude Mythos 5 1M",
+        },
+        "hf.co/meta-models/Muse-Glimmer-30B-GGUF": {
+          "name": "Muse Glimmer 30B",
         },
       },
     },
