@@ -13,13 +13,13 @@ correct-on-space() {
   correct-on-both
   case "$BUFFER" in
     *(docker|podman)' compoes')
-      BUFFER="${BUFFER%compoes}compose"
-       ;;
+      BUFFER="${BUFFER%compoes}compose";;
     vi)
-      BUFFER="nvim"
-      CURSOR=${#BUFFER} # update cursor position when buffer length changes
-      ;;
+      BUFFER="nvim";;
+    ud)
+      BUFFER="update-dotfiles";;
   esac
+  CURSOR=${#BUFFER} # update cursor position when buffer length changes
   zle magic-space
 }
 
