@@ -3,4 +3,4 @@
 # GitHub Dependabot rebase
 gh pr list --state open --app dependabot --json number |
   jq 'sort_by(.createdAt) | reverse | .[].number' |
-  xargs -L1 echo gh pr comment --body "@dependabot rebase"
+  xargs -L1 gh pr comment --body "@dependabot rebase"
