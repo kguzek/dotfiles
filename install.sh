@@ -11,10 +11,11 @@ fi
 
 REPOS_DIR="$HOME/repos"
 SCRIPTS_DIR="$HOME/repos/scripts"
+GIT_SERVER_HOST='git.guzek.uk'
 
 if [ ! -d "$SCRIPTS_DIR" ]; then
   mkdir -p "$REPOS_DIR"
-  git clone git@github.com:kguzek/scripts.git "$SCRIPTS_DIR"
+  git clone "https://$GIT_SERVER_HOST/kguzek/scripts.git" "$SCRIPTS_DIR"
 fi
 
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

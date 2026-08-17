@@ -5,6 +5,8 @@ set -e
 export UPDATING_DOTFILES=true
 SCRIPTS_REPO_PATH="$HOME/repos/scripts"
 
+GIT_SERVER_HOST='git.guzek.uk'
+
 typeset -U path
 path+=("$SCRIPTS_REPO_PATH/common")
 for required_command in log-status time-script; do
@@ -16,7 +18,7 @@ for required_command in log-status time-script; do
   echo "[x] Install the scripts repo and ensure $SCRIPTS_REPO_PATH/common is on PATH:" >&2
   echo >&2
   echo 'mkdir -p ~/repos' >&2
-  echo "git clone git@github.com:kguzek/scripts.git $SCRIPTS_REPO_PATH" >&2
+  echo "git clone https://$GIT_SERVER_HOST/kguzek/scripts.git $SCRIPTS_REPO_PATH" >&2
   exit 1
 done
 

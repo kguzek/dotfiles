@@ -192,6 +192,11 @@ if command -v wt >/dev/null 2>&1; then
   eval "$(command wt config shell init zsh)"
 fi
 
+# Forgejo CLI completions
+if command -v fj >/dev/null 2>&1; then
+  source <(fj completion zsh)
+fi
+
 # Custom functions
 for custom_function in "$ZSH_CUSTOM/functions"/*; do
   autoload -U "$(basename "$custom_function")"
