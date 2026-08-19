@@ -1,4 +1,4 @@
-#compdef update-dotfiles
+#compdef update-dotfiles ud
 
 _update-dotfiles() {
   _arguments \
@@ -9,3 +9,4 @@ _update-dotfiles() {
 }
 
 _update-dotfiles "$@"
+
