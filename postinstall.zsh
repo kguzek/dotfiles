@@ -59,7 +59,11 @@ ZSH="${ZSH:-"$HOME/.oh-my-zsh"}"
 ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
 
 # Plugins to clone/update into $ZSH_CUSTOM/plugins
-PLUGIN_REPOS=(zsh-users/zsh-autosuggestions zsh-users/zsh-syntax-highlighting)
+PLUGIN_REPOS=(
+  "$GIT_SERVER_HOST/kguzek/zsh-worktrunk"
+  'github.com/zsh-users/zsh-autosuggestions'
+  'github.com/zsh-users/zsh-syntax-highlighting'
+)
 
 # List of files and directories to symlink
 DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim)
@@ -151,10 +155,10 @@ update_git_repo() {
 }
 
 ensure_plugin() {
-  local repo=$1
+  local repo="$1"
   local repo_name=$(basename "$repo" .git)
-  local repo_url="https://github.com/$repo"
   local destination="$ZSH_CUSTOM/plugins/$repo_name"
+  local repo_url="https://$1.git"
 
   if [[ -d "$destination/.git" ]]; then
     update_git_repo "$destination"

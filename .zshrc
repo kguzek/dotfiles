@@ -77,7 +77,7 @@ DISABLE_MAGIC_FUNCTIONS="true"
 export NVM_LAZY=1
 VI_MODE_SET_CURSOR=true
 VI_MODE_CURSOR_INSERT=5
-plugins=(git asdf colored-man-pages vi-mode zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git asdf colored-man-pages vi-mode zsh-worktrunk zsh-autosuggestions zsh-syntax-highlighting)
 
 # Cache completions aggressively
 autoload -Uz compinit
