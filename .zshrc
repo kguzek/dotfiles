@@ -54,7 +54,7 @@ export NVM_DIR="$HOME/.nvm"
 NODE_CMDS=(nvm node npm npx pnpm nvim gemini pm2)
 
 _init_node() {
-  unset -f "${NODE_CMDS[@]}"
+  unset -f "${NODE_CMDS[@]}" 2>/dev/null
   local nvm_script_path="$NVM_DIR/nvm.sh"
   if [ -f "$nvm_script_path" ]; then
     source "$nvm_script_path"
@@ -116,7 +116,7 @@ fi
 
 # Custom functions
 for custom_function in "$ZSH_CUSTOM/functions"/*; do
-  autoload -U "$(basename "$custom_function")"
+  autoload -U "${custom_function:t}"
 done
 
 LOCAL_ZSHRC_PATH="$HOME/.zshrc.local"
