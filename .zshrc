@@ -130,6 +130,9 @@ source $ZSH/oh-my-zsh.sh
 # [[ ! -r '/home/konrad/.opam/opam-init/init.zsh' ]] || source '/home/konrad/.opam/opam-init/init.zsh' > /dev/null 2> /dev/null
 # END opam configuration
 
+# https://github.com/zsh-users/zsh-autosuggestions#suggestion-strategy
+ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd history)
+
 export PATH="$PATH:/opt/nvim/bin"
 export EDITOR='nvim'
 
