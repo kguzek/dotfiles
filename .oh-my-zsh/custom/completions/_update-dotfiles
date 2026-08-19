@@ -1,12 +1,3 @@
-#compdef update-dotfiles ud
+#compdef update-dotfiles
 
-_update-dotfiles() {
-  _arguments \
-    '(-n --dry-run)'{-n,--dry-run}'[Preview actions without changing files]' \
-    '--force[Skip creating backups only for conflicting symlinks]' \
-    '--skip-self-update[Skip updating the dotfiles repo itself]' \
-    '(-h --help)'{-h,--help}'[Show help message and exit]'
-}
-
-_update-dotfiles "$@"
-
+_arguments --
