@@ -4,8 +4,6 @@ set -e
 
 export UPDATING_DOTFILES=true
 SCRIPTS_REPO_PATH="$HOME/repos/scripts"
-PROGRAM_NAME="$(basename $0)"
-
 GIT_SERVER_HOST='git.guzek.uk'
 
 typeset -U path
@@ -23,7 +21,7 @@ for required_command in log-status time-script; do
   exit 1
 done
 
-if [ "$(basename "$SHELL")" != "zsh" ]; then
+if [ "${SHELL:t}" != "zsh" ]; then
   log-status failed "Please set zsh as your default shell before running this script."
   log-status failed "Current default shell: $SHELL"
   log-status info "If you have already done this, you might need to log out and log back in. Otherwise, consult chsh(1)." >&2
@@ -33,10 +31,11 @@ fi
 time-script --start
 
 setopt nullglob
-script_path=${(%):-%x}
-script_dir=$(dirname "$script_path")
-install_path=$(realpath "$script_dir")
-DOTFILES_UPDATE_SENTINEL=$(git -C "$install_path" rev-parse --path-format=absolute --git-path postinstall-updating)
+SCRIPT_PATH="${(%):-%x}"
+SCRIPT_DIR="${SCRIPT_PATH:A:h}"
+PROGRAM_NAME="${SCRIPT_PATH:t}"
+INSTALL_PATH=$(realpath "$SCRIPT_DIR")
+DOTFILES_UPDATE_SENTINEL=$(git -C "$INSTALL_PATH" rev-parse --path-format=absolute --git-path postinstall-updating)
 touch "$DOTFILES_UPDATE_SENTINEL"
 trap 'rm -f "$DOTFILES_UPDATE_SENTINEL"' EXIT
 DRY_RUN=false
@@ -208,7 +207,7 @@ create_symlink() {
 
 create_symlinks() {
   for dotfile in "$@"; do
-    create_symlink "$install_path/$dotfile" "$HOME/$dotfile"
+    create_symlink "$INSTALL_PATH/$dotfile" "$HOME/$dotfile"
   done
 }
 
@@ -235,7 +234,7 @@ update_job_pids=()
 update_job_descriptions=()
 
 if ! is_skip_self_update; then
-  queue_job update_git_repo "$install_path"
+  queue_job update_git_repo "$INSTALL_PATH"
 fi
 
 queue_job update_git_repo "$ZSH"
@@ -253,7 +252,7 @@ fi
 create_symlinks "${DOTFILES[@]}"
 
 for dotfile_dir in "${DOTFILE_DIRS[@]}"; do
-  items=("$script_dir/$dotfile_dir"/*)
+  items=("$SCRIPT_DIR/$dotfile_dir"/*)
   basenames=("${items[@]##*/}")
   targets=("${basenames[@]/#/$dotfile_dir/}")
 
@@ -261,16 +260,16 @@ for dotfile_dir in "${DOTFILE_DIRS[@]}"; do
 done
 
 # Additional zsh configuration files, such as global aliases
-for custom_file in "$install_path/$OMZ_CUSTOM_DIR"/*; do
+for custom_file in "$INSTALL_PATH/$OMZ_CUSTOM_DIR"/*; do
   # Allow configuration of a different OMZ custom path via ZSH_CUSTOM
-  create_symlink "$custom_file" "$ZSH_CUSTOM/$(basename "$custom_file")"
+  create_symlink "$custom_file" "$ZSH_CUSTOM/${custom_file:t}"
 done
 
 # Git hooks (for automatic reconfiguration on pull)
-for hook_path in "$install_path/hooks"/*.sh; do
-  hook_file=$(basename "$hook_path")
+for hook_path in "$INSTALL_PATH/hooks"/*.sh; do
+  hook_file="${hook_path:t}"
   hook_name=$(basename "$hook_file" .sh)
-  create_symlink "../../hooks/$hook_file" "$install_path/.git/hooks/$hook_name"
+  create_symlink "../../hooks/$hook_file" "$INSTALL_PATH/.git/hooks/$hook_name"
 done
 
 if is_dry_run; then
