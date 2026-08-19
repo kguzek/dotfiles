@@ -38,9 +38,6 @@ INSTALL_PATH=$(realpath "$SCRIPT_DIR")
 DOTFILES_UPDATE_SENTINEL=$(git -C "$INSTALL_PATH" rev-parse --path-format=absolute --git-path postinstall-updating)
 touch "$DOTFILES_UPDATE_SENTINEL"
 trap 'rm -f "$DOTFILES_UPDATE_SENTINEL"' EXIT
-DRY_RUN=false
-FORCE=false
-SKIP_SELF_UPDATE=false
 
 print_help() {
   cat <<EOF
@@ -71,39 +68,33 @@ DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim)
 # Each directory listed below will create a symlink to each of its children
 DOTFILE_DIRS=(.config)
 
-for arg in "$@"; do
-  case "$arg" in
-    --dry-run|-n)
-      DRY_RUN=true
-      ;;
-    --force)
-      FORCE=true
-      ;;
-    --skip-self-update)
-      SKIP_SELF_UPDATE=true
-      ;;
-    -h|--help)
-      print_help
-      exit 0
-      ;;
-    *)
-      echo "Unknown option: $arg"
-      print_help
-      exit 1
-      ;;
-  esac
-done
+zparseopts -D -- \
+  {h,-help}=FLAG_HELP \
+  {n,-dry-run}=FLAG_DRY_RUN \
+  {f,-force}=FLAG_FORCE \
+  {s,-skip-self-update}=FLAG_SKIP_SELF_UPDATE
+
+if [[ -n "$FLAG_HELP" ]]; then
+  print_help
+  exit 0
+fi
+
+if [[ -n $1 ]]; then
+  log-status failed "$PROGRAM_NAME: '$1': invalid argument"
+  echo "Try '$PROGRAM_NAME --help' for more information." >&2
+  exit 1
+fi
 
 is_dry_run() {
-  [[ "$DRY_RUN" == true ]]
+  [[ -n "$FLAG_DRY_RUN" ]]
 }
 
 is_force() {
-  [[ "$FORCE" == true ]]
+  [[ -n "$FLAG_FORCE" ]]
 }
 
 is_skip_self_update() {
-  [[ "$SKIP_SELF_UPDATE" == true ]]
+  [[ -n "$FLAG_SKIP_SELF_UPDATE" ]]
 }
 
 run_step() {
