@@ -1,0 +1,187 @@
+#compdef cf
+
+_cf_dns_types() {
+  compadd A AAAA CNAME TXT MX SRV NS CAA LOC
+}
+
+_cf_cached_tunnels() {
+  local cache_file
+  for cache_file in /tmp/scripts/cf-routes-*.json(N); do
+    command jq -r '.tunnel_name // empty' "$cache_file" 2>/dev/null
+  done
+}
+
+_cf_cached_domains() {
+  local cache_file
+  for cache_file in /tmp/scripts/cf-domains-*.json(N); do
+    command jq -r '.zones[].name // empty' "$cache_file" 2>/dev/null
+  done
+}
+
+_cf_dns_subcommands() {
+  local -a sc
+  sc=(
+    'add:Add a DNS record'
+    'edit:Edit a DNS record'
+    'delete:Delete a DNS record'
+    'remove:Delete a DNS record'
+  )
+  _describe 'subcommand' sc
+}
+
+_cf_route_subcommands() {
+  local -a sc
+  sc=(
+    'add:Add an ingress route'
+    'edit:Edit a route'
+    'delete:Delete a route'
+    'remove:Delete a route'
+  )
+  _describe 'subcommand' sc
+}
+
+_cf_routes() {
+  if (( CURRENT == 3 )); then
+    local -a tunnels
+    tunnels=("${(@f)$(_cf_cached_tunnels)}")
+    _describe 'tunnel' tunnels
+    return
+  fi
+
+  local -a flat
+  flat=(${words[3,-1]})
+
+  local i op
+  for i in {1..${#flat}}; do
+    case $flat[$i] in
+      add|edit|delete|remove)
+        op=$flat[$i]
+        break
+        ;;
+    esac
+  done
+
+  if [[ -z $op ]]; then
+    _cf_route_subcommands
+    return
+  fi
+
+  local op_index=${words[(Ie)$op]}
+  case $op in
+    add)
+      if (( CURRENT == op_index + 1 )); then
+        _message 'hostname'
+      else
+        _message 'service'
+      fi
+      ;;
+    edit)
+      if (( CURRENT == op_index + 1 )); then
+        _message 'route to edit (hostname or number)'
+      elif (( CURRENT == op_index + 2 )); then
+        _message 'new hostname (or service)'
+      else
+        _message 'service'
+      fi
+      ;;
+    delete|remove)
+      _message 'route to delete (hostname or number)'
+      ;;
+  esac
+}
+
+_cf_dns() {
+  if (( CURRENT == 3 )); then
+    local -a domains
+    domains=("${(@f)$(_cf_cached_domains)}")
+    _describe 'domain or subcommand' domains
+    _cf_dns_subcommands
+    compadd -x 'exclude type' -- -x --exclude
+    return
+  fi
+
+  if [[ $words[CURRENT-1] == (-x|--exclude) || $words[CURRENT-1] == --type ]]; then
+    _cf_dns_types
+    return
+  fi
+
+  local -a flat
+  flat=(${words[3,-1]})
+
+  local i op
+  for i in {1..${#flat}}; do
+    case $flat[$i] in
+      add|edit|delete|remove)
+        op=$flat[$i]
+        break
+        ;;
+    esac
+  done
+
+  if [[ -z $op ]]; then
+    case ${words[3]} in
+      <->)
+        # domain given as a number, now offer subcommands
+        _cf_dns_subcommands
+        ;;
+      add|edit|delete|remove)
+        :
+        ;;
+      *)
+        _cf_dns_subcommands
+        ;;
+    esac
+    return
+  fi
+
+  case $op in
+    add|edit)
+      if [[ ${words[CURRENT]} == --type* || $words[CURRENT-1] == --type ]]; then
+        _cf_dns_types
+      elif (( CURRENT == ( ${words[(Ie)$op]} + 1 ) )); then
+        _message 'DNS record name or number'
+      else
+        _message 'target value'
+      fi
+      ;;
+    delete|remove)
+      _message 'DNS record to delete (name or number)'
+      ;;
+  esac
+}
+
+_cf() {
+  local -a commands
+
+  commands=(
+    'tunnel:List Cloudflare tunnels'
+    'tunnels:List Cloudflare tunnels'
+    'route:List or manage ingress routes for a tunnel'
+    'routes:List or manage ingress routes for a tunnel'
+    'domain:List domains (zones) connected to the account'
+    'domains:List domains (zones) connected to the account'
+    'dns:List or manage DNS records'
+  )
+
+  if (( CURRENT == 1 )); then
+    _arguments '(-h --help)'{-h,--help}'[Show help message]'
+    return
+  fi
+
+  case $words[2] in
+    tunnel|tunnels|domain|domains)
+      _message 'no positional arguments'
+      ;;
+    route|routes)
+      _cf_routes
+      ;;
+    dns)
+      _cf_dns
+      ;;
+    *)
+      _describe 'command' commands
+      ;;
+  esac
+}
+
+_cf "$@"
