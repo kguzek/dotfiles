@@ -4,6 +4,7 @@ set -e
 
 export UPDATING_DOTFILES=true
 SCRIPTS_REPO_PATH="$HOME/repos/scripts"
+PROGRAM_NAME="$(basename $0)"
 
 GIT_SERVER_HOST='git.guzek.uk'
 
@@ -43,14 +44,14 @@ FORCE=false
 SKIP_SELF_UPDATE=false
 
 print_help() {
-  cat <<'EOF'
-Usage: ./postinstall.zsh [options]
+  cat <<EOF
+Usage: $PROGRAM_NAME [OPTION]...
 
 Options:
-  -n, --dry-run            Preview actions without changing files.
-  -f, --force              Skip creating backups only for conflicting symlinks. Real files/directories are still backed up.
-  -s, --skip-self-update   Skip updating the dotfiles repo itself.
-  -h, --help               Show this help message and exit.
+  -n, --dry-run            preview actions without changing files
+  -f, --force              skip creating backups only for conflicting symlinks (real files/directories are still backed up)
+  -s, --skip-self-update   skip updating the dotfiles repo itself
+  -h, --help               show this help message and exit
 EOF
 }
 
