@@ -8,6 +8,7 @@ alias glow='glow --pager'
 alias get="curl --fail --location --write-out '\n'" # perform http GET
 alias mip='get ifconfig.me'                         # obtain My IP address
 alias aliasg='alias | grep'                         # list ALIASes then Grep them
+alias ud='update-dotfiles'                          # Update Dotfiles
 
 # custom git subcommand aliases
 alias gfp='git fetch --prune'
