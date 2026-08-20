@@ -79,7 +79,7 @@ if [[ -n "$FLAG_HELP" ]]; then
   exit 0
 fi
 
-if [[ -n $1 ]]; then
+if (( $# > 0 )); then
   log-status failed "$PROGRAM_NAME: '$1': invalid argument"
   echo "Try '$PROGRAM_NAME --help' for more information." >&2
   exit 1
