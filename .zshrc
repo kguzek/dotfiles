@@ -91,6 +91,9 @@ if command -v spf >/dev/null; then
   }
 fi
 
+# script/function completions
+compdef _git gclr=git-clone
+
 # bun completions
 [ -s "$BUN_INSTALL/_bun" ] && source "$BUN_INSTALL/_bun"
 
