@@ -1,4 +1,7 @@
 worktree-path = "{{ repo_path }}/../{{ branch | sanitize }}"
 
+[commit.generation]
+command = "opencode run --model 'opencode-go/gpt-5.6-luna' --variant 'fast' --pure"
+
 [list]
 json-schema = 2
