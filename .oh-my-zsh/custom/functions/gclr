@@ -1,0 +1,19 @@
+# vim: ft=zsh
+
+# Git clone repository (shorthand)
+if [ -z "$1" ]; then
+  echo "Usage: $0 [AUTHOR/]REPO" >&2
+  return 1
+fi
+
+local repo="$1"
+local author='kguzek'
+shift
+
+# If input contains a slash, assume it's author/repo
+if [[ "$repo" == */* ]]; then
+  author="${repo:h}"
+  repo="${repo:t}"
+fi
+
+git clone "$@" "git@github.com:$author/$repo.git" && cd "$repo"
