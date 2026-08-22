@@ -14,9 +14,6 @@ if [ -e "$HOMEBREW_PATH" ]; then
 	eval "$("$HOMEBREW_PATH" shellenv)"
 fi
 
-# asdf shims
-_add_to_path "${ASDF_DATA_DIR:-$HOME/.asdf}/shims"
-
 # Android SDK
 export ANDROID_HOME="$HOME/Android/Sdk"
 _add_to_path "$ANDROID_HOME/platform-tools"
