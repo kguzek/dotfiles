@@ -18,6 +18,8 @@ if [ -f "$CARGO_ENV" ]; then
   source "$CARGO_ENV"
 fi
 
+_add_to_path "$HOME/.local/bin"
+
 # Local scripts
 LOCAL_SCRIPTS_ROOT="$HOME/repos/scripts"
 _add_to_path "$LOCAL_SCRIPTS_ROOT/$(hostname -s)"
