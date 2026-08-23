@@ -1,0 +1,6 @@
+#compdef generate-wpa-config
+
+_arguments \
+  "1:network_name:($(nmcli --terse --fields=NAME connection show))" \
+  "2:interface_name:($(ip -json addr show | jq --raw-output '.[] .ifname'))" \
+  --
