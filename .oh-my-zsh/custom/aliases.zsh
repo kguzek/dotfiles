@@ -7,9 +7,10 @@ alias glow='glow --pager'
 # custom commands and wrappers
 alias get="curl --fail --location --write-out '\n'" # perform http GET
 alias mip='get ifconfig.me'                         # obtain My IP address
-alias aligrep='alias | grep'                         # list ALIases then GREP them
-alias hisgrep='history | grep'                       # list HIStory then GREP it
+alias aligrep='alias | grep'                        # list ALIases then GREP them
+alias hisgrep='history | grep'                      # list HIStory then GREP it
 alias ud='update-dotfiles'                          # Update Dotfiles
+alias uc='update-containers'                        # Update Containers
 
 # custom git subcommand aliases
 alias gfp='git fetch --prune'
