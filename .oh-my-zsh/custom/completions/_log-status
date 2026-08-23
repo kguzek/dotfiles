@@ -1,26 +1,11 @@
 #compdef log-status
 
-_log-status() {
-  local -a levels
-
-  levels=(
-    'changed:[+]'
-    'complete:[✓]'
-    'warn:[!]'
-    'info:[·]'
-    'unchanged:[=]'
-    'failed:[x]'
-    'input:[?]'
-    'numbered'
-  )
-
-  if (( CURRENT == 2 )); then
-    _describe 'level' levels
-  elif [[ $words[2] == numbered ]] && (( CURRENT == 3 )); then
-    _arguments '2:number:'
-  else
-    _arguments '*:message:'
-  fi
-}
-
-_log-status "$@"
+# TODO: support level completions after specifying an option
+# TODO: support option completions for --list-levels
+if (( CURRENT == 2 )); then
+  _arguments "1:log_level:($(log-status --list-levels))" --
+elif [[ $words[2] == numbered ]] && (( CURRENT == 3 )); then
+  _arguments '2:number:' --
+else
+  _arguments '*:message:' --
+fi
