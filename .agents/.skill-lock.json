@@ -1,0 +1,224 @@
+{
+  "version": 3,
+  "skills": {
+    "agent-slack": {
+      "source": "stablyai/agent-slack",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/stablyai/agent-slack.git",
+      "skillPath": "skills/agent-slack/SKILL.md",
+      "skillFolderHash": "12f63388bd2b0e66dbe4012cd96bc226078341ae",
+      "installedAt": "2026-05-13T15:54:59.435Z",
+      "updatedAt": "2026-05-13T15:54:59.435Z"
+    },
+    "dart-add-unit-test": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-add-unit-test/SKILL.md",
+      "skillFolderHash": "d550d40b3200932ab62065b9039bc8e871bc2de5",
+      "installedAt": "2026-06-24T18:20:28.509Z",
+      "updatedAt": "2026-06-24T18:20:28.509Z"
+    },
+    "dart-build-cli-app": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-build-cli-app/SKILL.md",
+      "skillFolderHash": "e72d2bfc68fa36e8b4c6161d7a8885e8ed8407c7",
+      "installedAt": "2026-06-24T18:20:28.511Z",
+      "updatedAt": "2026-06-24T18:20:28.511Z"
+    },
+    "dart-collect-coverage": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-collect-coverage/SKILL.md",
+      "skillFolderHash": "818903454e5ca282a4ac278fa7f6cbc5c98084ac",
+      "installedAt": "2026-06-24T18:20:28.512Z",
+      "updatedAt": "2026-06-24T18:20:28.512Z"
+    },
+    "dart-fix-runtime-errors": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-fix-runtime-errors/SKILL.md",
+      "skillFolderHash": "3b8107906efca3b7f61033a033046966030b4316",
+      "installedAt": "2026-06-24T18:20:28.512Z",
+      "updatedAt": "2026-06-24T18:20:28.512Z"
+    },
+    "dart-generate-test-mocks": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-generate-test-mocks/SKILL.md",
+      "skillFolderHash": "36fbbd32e2517e37b7d071a429b8ffcd682c1088",
+      "installedAt": "2026-06-24T18:20:28.512Z",
+      "updatedAt": "2026-06-24T18:20:28.512Z"
+    },
+    "dart-migrate-to-checks-package": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-migrate-to-checks-package/SKILL.md",
+      "skillFolderHash": "949f300760f8362d3ed9fc3cafb8dde7787bec7c",
+      "installedAt": "2026-06-24T18:20:28.513Z",
+      "updatedAt": "2026-06-24T18:20:28.513Z"
+    },
+    "dart-resolve-package-conflicts": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-resolve-package-conflicts/SKILL.md",
+      "skillFolderHash": "aa232cc0ca7a097a2593672cc065f9d7b102c462",
+      "installedAt": "2026-06-24T18:20:28.513Z",
+      "updatedAt": "2026-06-24T18:20:28.513Z"
+    },
+    "dart-run-static-analysis": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-run-static-analysis/SKILL.md",
+      "skillFolderHash": "333a193146ab5f5876093beb7896ff792f9df467",
+      "installedAt": "2026-06-24T18:20:28.513Z",
+      "updatedAt": "2026-06-24T18:20:28.513Z"
+    },
+    "dart-use-ffigen": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-use-ffigen/SKILL.md",
+      "skillFolderHash": "e7fe916ee253fef8d29f75b864e9a624c6ae9639",
+      "installedAt": "2026-06-24T18:20:28.514Z",
+      "updatedAt": "2026-06-24T18:20:28.514Z"
+    },
+    "dart-use-pattern-matching": {
+      "source": "dart-lang/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/dart-lang/skills.git",
+      "skillPath": "skills/dart-use-pattern-matching/SKILL.md",
+      "skillFolderHash": "4a5dc5d5dbc77e2a7d2fd88d42adafc2cbaedbdc",
+      "installedAt": "2026-06-24T18:20:28.514Z",
+      "updatedAt": "2026-06-24T18:20:28.514Z"
+    },
+    "find-skills": {
+      "source": "vercel-labs/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/vercel-labs/skills.git",
+      "skillPath": "skills/find-skills/SKILL.md",
+      "skillFolderHash": "3013fdeb8a11b10b1eb795ec3ae8bfca38f7c26d",
+      "installedAt": "2026-05-13T15:55:09.789Z",
+      "updatedAt": "2026-05-13T15:55:09.789Z"
+    },
+    "flutter-add-integration-test": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-add-integration-test/SKILL.md",
+      "skillFolderHash": "2662e110e1aa719a30b58536fce6fca7793fe690",
+      "installedAt": "2026-06-24T18:21:32.903Z",
+      "updatedAt": "2026-06-24T18:21:32.903Z"
+    },
+    "flutter-add-widget-preview": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-add-widget-preview/SKILL.md",
+      "skillFolderHash": "ef0192a0d08c593fb0385a9aa5c8836eee8ccb44",
+      "installedAt": "2026-06-24T18:21:32.907Z",
+      "updatedAt": "2026-06-24T18:21:32.907Z"
+    },
+    "flutter-add-widget-test": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-add-widget-test/SKILL.md",
+      "skillFolderHash": "8b4202131bb2f3e47c7a512f6fe401ea2fc40046",
+      "installedAt": "2026-06-24T18:21:32.907Z",
+      "updatedAt": "2026-06-24T18:21:32.907Z"
+    },
+    "flutter-apply-architecture-best-practices": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-apply-architecture-best-practices/SKILL.md",
+      "skillFolderHash": "d5a184eff2ce5a111d4f290efd2ba5511b8a6d69",
+      "installedAt": "2026-06-24T18:21:32.908Z",
+      "updatedAt": "2026-06-24T18:21:32.908Z"
+    },
+    "flutter-build-responsive-layout": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-build-responsive-layout/SKILL.md",
+      "skillFolderHash": "018c3c52c14b46fe242ef0b1336a7b07d5d860be",
+      "installedAt": "2026-06-24T18:21:32.908Z",
+      "updatedAt": "2026-06-24T18:21:32.908Z"
+    },
+    "flutter-fix-layout-issues": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-fix-layout-issues/SKILL.md",
+      "skillFolderHash": "2227ad7b018a7b381a701aedabe74555667add58",
+      "installedAt": "2026-06-24T18:21:32.909Z",
+      "updatedAt": "2026-06-24T18:21:32.909Z"
+    },
+    "flutter-implement-json-serialization": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-implement-json-serialization/SKILL.md",
+      "skillFolderHash": "8c117bee0dd986449f4d636b86221a7f9485a222",
+      "installedAt": "2026-06-24T18:21:32.909Z",
+      "updatedAt": "2026-06-24T18:21:32.909Z"
+    },
+    "flutter-setup-declarative-routing": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-setup-declarative-routing/SKILL.md",
+      "skillFolderHash": "15765e83c9051b4b9f79612f43b273018d8923ef",
+      "installedAt": "2026-06-24T18:21:32.910Z",
+      "updatedAt": "2026-06-24T18:21:32.910Z"
+    },
+    "flutter-setup-localization": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-setup-localization/SKILL.md",
+      "skillFolderHash": "9f0dbd0422cd764fa4374005a2eb2c94082a6de2",
+      "installedAt": "2026-06-24T18:21:32.910Z",
+      "updatedAt": "2026-06-24T18:21:32.910Z"
+    },
+    "flutter-use-http-package": {
+      "source": "flutter/skills",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/flutter/skills.git",
+      "skillPath": "skills/flutter-use-http-package/SKILL.md",
+      "skillFolderHash": "e6e4937fe8d16fc8fb37921ac00f669124731752",
+      "installedAt": "2026-06-24T18:21:32.912Z",
+      "updatedAt": "2026-06-24T18:21:32.912Z"
+    },
+    "gh": {
+      "source": "cli/cli",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/cli/cli.git",
+      "skillPath": "skills/gh/SKILL.md",
+      "skillFolderHash": "5cf8c343d459cc0fdd839100c02b6fbb1ddda8e1",
+      "installedAt": "2026-09-03T09:04:42Z",
+      "updatedAt": "2026-09-03T09:04:42Z"
+    },
+    "gh-stack": {
+      "source": "github/gh-stack",
+      "sourceType": "github",
+      "sourceUrl": "https://github.com/github/gh-stack.git",
+      "skillPath": "skills/gh-stack/SKILL.md",
+      "skillFolderHash": "6bfe555e89a6b264e09d5ece7c4040226458c8e5",
+      "installedAt": "2026-09-03T09:01:22Z",
+      "updatedAt": "2026-09-03T09:01:22Z"
+    }
+  },
+  "dismissed": {
+    "findSkillsPrompt": true
+  }
+}

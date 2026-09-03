@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# Generated file; do not edit.
+set -euo pipefail
+
+ROOT_DIR="${NOAH_SKILLS_ROOT:-/Users/konrad/repos/kenley/noah-skill}"
+exec "$ROOT_DIR/ai/skills/agent-slack/scripts/refresh-local-kenley-workspace-context" "$@"
