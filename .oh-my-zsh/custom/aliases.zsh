@@ -2,7 +2,7 @@
 alias ls='ls --color=auto'
 alias df='df --human-readable --local -x tmpfs -x devtmpfs -x squashfs'
 alias rsync='rsync --archive --verbose --exclude=.DS_Store'
-alias glow='glow --pager'
+alias glow='glow --config $HOME/.config/glow/glow.yml'
 
 # custom commands and wrappers
 alias get="curl --fail --location --write-out '\n'" # perform http GET
