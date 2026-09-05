@@ -8,10 +8,10 @@ _add_to_path() {
   fi
 }
 
-# Homebrew
-HOMEBREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
-if [ -e "$HOMEBREW_PATH" ]; then
-	eval "$("$HOMEBREW_PATH" shellenv)"
+# Linuxbrew
+LINUXBREW_PATH="/home/linuxbrew/.linuxbrew/bin/brew"
+if [ -e "$LINUXBREW_PATH" ]; then
+  eval "$("$LINUXBREW_PATH" shellenv)"
 fi
 
 # Android SDK
