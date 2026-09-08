@@ -11,6 +11,7 @@ alias aligrep='alias | grep'                        # list ALIases then GREP the
 alias hisgrep='history | grep'                      # list HIStory then GREP it
 alias ud='update-dotfiles'                          # Update Dotfiles
 alias uc='update-containers'                        # Update Containers
+alias oc='opencode'                                 # OpenCode
 
 # custom git subcommand aliases
 alias gfp='git fetch --prune'
