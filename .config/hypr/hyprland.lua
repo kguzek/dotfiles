@@ -304,6 +304,7 @@ hl.bind(mainMod .. " + D", hl.dsp.exec_cmd("discord"))
 hl.bind(mainMod .. " + E", hl.dsp.exec_cmd(element))
 hl.bind(mainMod .. " + V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
+hl.bind(mainMod .. " + F", hl.dsp.window.fullscreen())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit")) -- dwindle only
 hl.bind(mainMod .. " + L", hl.dsp.exec_cmd("loginctl lock-session"))
 hl.bind(mainMod .. " + SHIFT + L", hl.dsp.exec_cmd("systemctl suspend"))
