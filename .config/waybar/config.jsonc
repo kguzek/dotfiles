@@ -139,9 +139,16 @@
   },
 
   "network": {
-    "format-wifi": "  {signalStrength}%",
+    "on-click": "rfkill toggle wlan",
+    "format-wifi": "{icon}",
+    "format-disabled": "󰖪",
     "format-ethernet": "󰈀",
-    "format-disconnected": "",
+    "format-disconnected": "",
+    "tooltip-format-wifi": "Click to disable Wi-Fi\n\n  Signal strength: {signalStrength}%",
+    "tooltip-format-disabled": "Click to enable Wi-Fi",
+    "tooltip-format-ethernet": "Ethernet connected",
+    "tooltip-format-disconnected": "Network disconnected",
+    "format-icons": ["󰤯", "󰤟", "󰤢", "󰤥", "󰤨"],
   },
 
   "custom/mako": {
