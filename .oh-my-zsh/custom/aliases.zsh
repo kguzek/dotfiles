@@ -12,6 +12,7 @@ alias hisgrep='history | grep'                      # list HIStory then GREP it
 alias ud='update-dotfiles'                          # Update Dotfiles
 alias uc='update-containers'                        # Update Containers
 alias oc='opencode'                                 # OpenCode
+alias bt='bluetoothctl'                             # BlueTooth control
 
 # custom git subcommand aliases
 alias gfp='git fetch --prune'

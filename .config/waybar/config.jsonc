@@ -13,6 +13,7 @@
     "wireplumber#sink",
     "wireplumber#source",
     "battery",
+    "bluetooth",
     "network",
     "custom/mako",
     "tray",
@@ -104,6 +105,24 @@
     "max-length": 25,
   },
 
+  "bluetooth": {
+    "on-click": "bluetoothctl disconnect & rfkill toggle bluetooth",
+    "format": "󰂳",
+    "format-no-controller": "",
+    "format-on": "",
+    "format-off": "󰂱",
+    "format-disabled": "󰂲",
+    "format-connected": " {num_connections}",
+    "format-connected-battery": " {device_alias} {device_battery_percentage}%",
+    "tooltip-format": "Unknown state\n{controller_alias}\t{controller_address}",
+    "tooltip-format-on": "Click to disable Bluetooth\n\nNo devices connected",
+    "tooltip-format-off": "Bluetooth is powered off",
+    "tooltip-format-disabled": "Click to enable Bluetooth",
+    "tooltip-format-connected": "{device_enumerate}",
+    "tooltip-format-enumerate-connected": "{device_alias}",
+    "tooltip-format-enumerate-connected-battery": "{device_alias}\t{device_battery_percentage}%",
+  },
+
   "network": {
     "format-wifi": "  {signalStrength}%",
     "format-ethernet": "󰈀",
@@ -126,5 +145,6 @@
 
   "tray": {
     "spacing": 15,
+    "reverse-direction": true,
   },
 }
