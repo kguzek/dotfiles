@@ -152,17 +152,11 @@
   },
 
   "custom/mako": {
-    "exec": "if makoctl mode | grep -qx do-not-disturb; then printf '{\"alt\":\"activated\"}\\n'; else printf '{\"alt\":\"deactivated\"}\\n'; fi",
+    "exec": "if makoctl mode | grep -qx do-not-disturb; then printf '{\"text\":\"\",\"tooltip\":\"Click to disable do not disturb mode\\\\nRight-click to dismiss all notifications\"}\\n'; else printf '{\"text\":\"\",\"tooltip\":\"Click to enable do not disturb mode\\\\nRight-click to dismiss all notifications\"}\\n'; fi",
     "return-type": "json",
-    "interval": 1,
+    "interval": 30,
     "on-click": "makoctl mode -t do-not-disturb",
-    "format": "{icon}",
-    "format-icons": {
-      "activated": " ",
-      "deactivated": " ",
-    },
-    "tooltip": true,
-    "tooltip-format": "Toggle do not disturb mode for notifications",
+    "on-click-right": "makoctl dismiss --all",
   },
 
   "tray": {
