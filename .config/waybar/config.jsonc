@@ -99,9 +99,9 @@
       "critical": 15,
     },
     "events": {
-      "on-discharging-warning": "notify-send -u normal 'Battery level low :(",
-      "on-discharging-critical": "notify-send -u critical 'Battery level critical!'",
-      "on-charging-100": "notify-send -u low 'Battery is full :)'",
+      "on-discharging-warning": "notify-send --expire-time 30000 --urgency normal 'Battery level low :(",
+      "on-discharging-critical": "notify-send --urgency critical 'Battery level critical!'",
+      "on-charging-max": "notify-send --expire-time 5000 --urgency low 'Battery is full :)'",
     },
     "format": "󱧥 {capacity}%",
     "format-full": "󱟢 {capacity}%",
