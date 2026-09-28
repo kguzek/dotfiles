@@ -58,6 +58,7 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-"$HOME/$OMZ_CUSTOM_DIR"}"
 # Plugins to clone/update into $ZSH_CUSTOM/plugins
 PLUGIN_REPOS=(
   "$GIT_SERVER_HOST/kguzek/zsh-worktrunk"
+  "$GIT_SERVER_HOST/kguzek/zsh-bluetoothctl"
   'github.com/zsh-users/zsh-autosuggestions'
   'github.com/zsh-users/zsh-syntax-highlighting'
 )

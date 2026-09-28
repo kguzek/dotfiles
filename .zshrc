@@ -30,7 +30,7 @@ VI_MODE_CURSOR_INSERT=5
 # See https://github.com/zsh-users/zsh-autosuggestions#suggestion-strategy
 ZSH_AUTOSUGGEST_STRATEGY=(match_prev_cmd history)
 
-plugins=(git asdf colored-man-pages vi-mode zsh-worktrunk zsh-autosuggestions zsh-syntax-highlighting)
+plugins=(git asdf colored-man-pages vi-mode zsh-worktrunk zsh-bluetoothctl zsh-autosuggestions zsh-syntax-highlighting)
 
 # Cache completions aggressively
 autoload -Uz compinit
