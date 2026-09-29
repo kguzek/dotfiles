@@ -4,6 +4,15 @@ alias df='df --human-readable --local -x tmpfs -x devtmpfs -x squashfs'
 alias rsync='rsync --archive --verbose --exclude=.DS_Store'
 alias glow='glow --config $HOME/.config/glow/glow.yml'
 
+# shell operation aliases
+alias ZZ='exit'
+alias ':wq'='exit'
+alias ':q'='exit'
+alias ':q!'='exit'
+alias ':x'='exit'
+alias ':x!'='exit'
+alias ':e'='source $HOME/.zprofile $HOME/.zshenv $HOME/.zshrc'
+
 # custom commands and wrappers
 alias get="curl --fail --location --write-out '\n'" # perform http GET
 alias mip='get ifconfig.me'                         # obtain My IP address
