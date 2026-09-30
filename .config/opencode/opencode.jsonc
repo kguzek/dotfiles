@@ -16,6 +16,15 @@
       "url": "https://planer.solvro.pl/api/mcp",
       "enabled": true,
     },
+    "coolify": {
+      "type": "remote",
+      "url": "https://devops.solvro.pl/mcp",
+      "enabled": true,
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:SOLVRO_COOLIFY_API_KEY}",
+      },
+    },
   },
   // OpenCode Quota: tuiCommandDisplay chooses whether native TUI command output appears in the session transcript or a local popup dialog.
   // OpenCode Quota: loads the server plugin for slash commands and quota checks.
