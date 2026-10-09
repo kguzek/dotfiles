@@ -64,7 +64,7 @@ PLUGIN_REPOS=(
 )
 
 # List of files and directories to symlink
-DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .agents)
+DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .agents .pi)
 
 # Each directory listed below will create a symlink to each of its children
 DOTFILE_DIRS=(.config)
