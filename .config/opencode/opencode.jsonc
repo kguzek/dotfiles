@@ -14,12 +14,12 @@
     "planer": {
       "type": "remote",
       "url": "https://planer.solvro.pl/api/mcp",
-      "enabled": true,
+      "enabled": false,
     },
     "coolify": {
       "type": "remote",
       "url": "https://devops.solvro.pl/mcp",
-      "enabled": true,
+      "enabled": false,
       "oauth": false,
       "headers": {
         "Authorization": "Bearer {env:SOLVRO_COOLIFY_API_KEY}",
