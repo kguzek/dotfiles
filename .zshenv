@@ -1,3 +1,5 @@
+# Cross-environment shell setup
+ 
 typeset -U path
 
 _add_to_path() {
@@ -5,6 +7,10 @@ _add_to_path() {
     path+=("$1")
   fi
 }
+
+REPOS_PATH="$HOME/repos"
+DOTFILES_PATH="$REPOS_PATH/dotfiles"
+LOCAL_SCRIPTS_PATH="$REPOS_PATH/scripts"
 
 VOLTA_HOME="$HOME/.volta"
 if [ -d "$VOLTA_HOME" ]; then
@@ -21,9 +27,9 @@ fi
 _add_to_path "$HOME/.local/bin"
 
 # Local scripts
-LOCAL_SCRIPTS_ROOT="$HOME/repos/scripts"
-_add_to_path "$LOCAL_SCRIPTS_ROOT/$(hostname -s)"
-_add_to_path "$LOCAL_SCRIPTS_ROOT/common"
+_add_to_path "$DOTFILES_PATH/bin"
+_add_to_path "$LOCAL_SCRIPTS_PATH/$(hostname -s)"
+_add_to_path "$LOCAL_SCRIPTS_PATH/common"
 
 LOCAL_ZSHENV_PATH="$HOME/.zshenv.local"
 if [ -f "$LOCAL_ZSHENV_PATH" ]; then

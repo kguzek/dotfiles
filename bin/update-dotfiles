@@ -22,10 +22,8 @@ for required_command in log-status time-script; do
 done
 
 if [ "${SHELL:t}" != "zsh" ]; then
-  log-status failed "Please set zsh as your default shell before running this script."
-  log-status failed "Current default shell: $SHELL"
-  log-status info "If you have already done this, you might need to log out and log back in. Otherwise, consult chsh(1)." >&2
-  exit 1
+  log-status warn "Detected non-zsh default shell: $SHELL"
+  log-status warn "If you have already updated your default shell to zsh, you might need to log out and log back in. Otherwise, consult chsh(1)." >&2
 fi
 
 time-script --start
@@ -34,8 +32,8 @@ setopt nullglob
 SCRIPT_PATH="${(%):-%x}"
 SCRIPT_DIR="${SCRIPT_PATH:A:h}"
 PROGRAM_NAME="${SCRIPT_PATH:t}"
-INSTALL_PATH=$(realpath "$SCRIPT_DIR")
-DOTFILES_UPDATE_SENTINEL=$(git -C "$INSTALL_PATH" rev-parse --path-format=absolute --git-path postinstall-updating)
+INSTALL_PATH="$(realpath "$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel || "${SCRIPT_DIR:h}")")"
+DOTFILES_UPDATE_SENTINEL=$(git -C "$INSTALL_PATH" rev-parse --path-format=absolute --git-path dotfiles-updating)
 touch "$DOTFILES_UPDATE_SENTINEL"
 trap 'rm -f "$DOTFILES_UPDATE_SENTINEL"' EXIT
 
