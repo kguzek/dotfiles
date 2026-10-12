@@ -14,14 +14,15 @@ alias ':x!'='exit'
 alias ':e'='source $HOME/.zprofile $HOME/.zshenv $HOME/.zshrc'
 
 # custom commands and wrappers
-alias get="curl --fail --location --write-out '\n'" # perform http GET
-alias mip='get ifconfig.me'                         # obtain My IP address
-alias aligrep='alias | grep'                        # list ALIases then GREP them
-alias hisgrep='history | grep'                      # list HIStory then GREP it
-alias ud='update-dotfiles'                          # Update Dotfiles
-alias uc='update-containers'                        # Update Containers
-alias oc='opencode'                                 # OpenCode
-alias bt='bluetoothctl'                             # BlueTooth control
+alias get="curl --fail --location --write-out '\n'"                                                                                             # perform http GET
+alias mip='get ifconfig.me'                                                                                                                     # obtain My IP address
+alias aligrep='alias | grep'                                                                                                                    # list ALIases then GREP them
+alias hisgrep='history | grep'                                                                                                                  # list HIStory then GREP it
+alias ud='update-dotfiles'                                                                                                                      # Update Dotfiles
+alias uc='update-containers'                                                                                                                    # Update Containers
+alias oc='opencode'                                                                                                                             # OpenCode
+alias bt='bluetoothctl'                                                                                                                         # BlueTooth control
+alias dus='du --max-depth=1 . | sort --numeric-sort | numfmt --field=1 --unit-separator=" " --from-unit=1024 --to=iec-i --suffix=B --padding=7' # Disk Usage Summary
 
 # custom git subcommand aliases
 alias gfp='git fetch --prune'
