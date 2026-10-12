@@ -46,7 +46,7 @@ if [ -d "$PNPM_HOME" ]; then
 fi
 
 # Go
-GOPATH="$HOME/go"
+GOPATH="$HOME/.go"
 if [ -d "$GOPATH" ]; then
   export GOPATH
   export GOBIN="$GOPATH/bin"
