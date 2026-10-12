@@ -67,6 +67,11 @@ DOTFILES=(.zshrc .zprofile .zshenv .vimrc .vim .agents .pi)
 # Each directory listed below will create a symlink to each of its children
 DOTFILE_DIRS=(.config)
 
+# This is an array of directories which should not be symlinked directly in $OMZ_CUSTOM_DIR,
+# but rather each of their children should be symlinked individually
+# Used for OMZ dirs like `custom/themes` and `custom/plugins` because they contain checked-in template files
+OMZ_CUSTOM_NESTED_DIRS=(themes)
+
 zparseopts -D -- \
   {h,-help}=FLAG_HELP \
   {n,-dry-run}=FLAG_DRY_RUN \
@@ -251,8 +256,16 @@ done
 
 # Additional zsh configuration files, such as global aliases
 for custom_file in "$INSTALL_PATH/$OMZ_CUSTOM_DIR"/*; do
+  custom_filename="${custom_file:t}"
+  if (( $OMZ_CUSTOM_NESTED_DIRS[(Ie)$custom_filename] )); then
+    # Link each nested file individually
+    for nested_file in "$custom_file"/*; do
+      create_symlink "$nested_file" "$ZSH_CUSTOM/$custom_filename/${nested_file:t}"
+    done
+    continue
+  fi
   # Allow configuration of a different OMZ custom path via ZSH_CUSTOM
-  create_symlink "$custom_file" "$ZSH_CUSTOM/${custom_file:t}"
+  create_symlink "$custom_file" "$ZSH_CUSTOM/$custom_filename"
 done
 
 # Git hooks (for automatic reconfiguration on pull)
