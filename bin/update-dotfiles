@@ -30,7 +30,7 @@ time-script --start
 
 setopt nullglob
 SCRIPT_PATH="${(%):-%x}"
-SCRIPT_DIR="${SCRIPT_PATH:A:h}"
+SCRIPT_DIR="${SCRIPT_PATH:A:h:h}"
 PROGRAM_NAME="${SCRIPT_PATH:t}"
 INSTALL_PATH="$(realpath "$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel || "${SCRIPT_DIR:h}")")"
 DOTFILES_UPDATE_SENTINEL=$(git -C "$INSTALL_PATH" rev-parse --path-format=absolute --git-path dotfiles-updating)
