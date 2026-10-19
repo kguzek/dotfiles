@@ -1,3 +1,5 @@
+# vim: ft=dosini
+
 [KDE]
 ShowDeleteCommand=false
 
@@ -7,3 +9,6 @@ Dialog Size=600,480
 [PreviewSettings]
 EnableRemoteFolderThumbnail=false
 MaximumRemoteSize=0
+
+[General]
+TerminalApplication=ghostty
