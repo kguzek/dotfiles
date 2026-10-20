@@ -65,8 +65,8 @@ specyfikacje, ilości, projekt i terminy umieszczaj w treści, nie w temacie.
 ## Treść przy zakupie przez Politechnikę Wrocławską
 
 - Rozpocznij od „Dzień dobry,” lub „Szanowni Państwo,”.
-- Przedstaw nadawcę jako osobę reprezentującą Koło Naukowe Solvro działające
-  przy Politechnice Wrocławskiej.
+- Przedstaw nadawcę jako osobę reprezentującą Strategiczne Koło Naukowe Solvro
+  działające przy Politechnice Wrocławskiej.
 - Jednoznacznie opisz przedmiot wyceny, ilości i wymagania użytkownika.
 - Poproś o uwzględnienie w ofercie:
   - danych dostawcy: adresu, NIP i numeru rachunku bankowego;
@@ -113,6 +113,7 @@ Przed oddaniem sprawdź:
 
 - Czy prośba rzeczywiście dotyczy zapytania ofertowego dla KN Solvro?
 - Czy temat ma dokładnie wymagany, krótki format?
+- Czy na początku maila użyto nazwy „Strategiczne Koło Naukowe Solvro”?
 - Czy uwzględniono wszystkie podane pozycje, ilości i parametry bez zmyślania?
 - Czy przy rozliczeniu przez PWr wskazano oficjalne zamówienie, wymagane dane
   oferty, proformę i płatność odroczoną minimum 14 dni bez przedpłaty?
