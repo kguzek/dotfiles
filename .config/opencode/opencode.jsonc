@@ -1,28 +1,30 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
-    "linear": {
-      "type": "remote",
-      "url": "https://mcp.linear.app/mcp",
-      "enabled": true,
-    },
-    "firmowid": {
-      "type": "remote",
-      "url": "https://firmowid.pl/mcp",
-      "enabled": true,
-    },
-    "planer": {
-      "type": "remote",
-      "url": "https://planer.solvro.pl/api/mcp",
-      "enabled": false,
-    },
-    "coolify": {
-      "type": "remote",
-      "url": "https://devops.solvro.pl/mcp",
-      "enabled": false,
-      "oauth": false,
-      "headers": {
-        "Authorization": "Bearer {env:SOLVRO_COOLIFY_API_KEY}",
+    "servers": {
+      "linear": {
+        "type": "remote",
+        "url": "https://mcp.linear.app/mcp",
+        "disabled": false,
+      },
+      "firmowid": {
+        "type": "remote",
+        "url": "https://firmowid.pl/mcp",
+        "disabled": false,
+      },
+      "planer": {
+        "type": "remote",
+        "url": "https://planer.solvro.pl/api/mcp",
+        "disabled": true,
+      },
+      "coolify": {
+        "type": "remote",
+        "url": "https://devops.solvro.pl/mcp",
+        "disabled": true,
+        "oauth": false,
+        "headers": {
+          "Authorization": "Bearer {env:SOLVRO_COOLIFY_API_KEY}",
+        },
       },
     },
   },
