@@ -98,6 +98,7 @@ hl.env("HYPRCURSOR_SIZE", "24")
 hl.env("LIBVA_DRIVER_NAME", "nvidia")
 hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
 hl.env("QT_QPA_PLATFORMTHEME", "qt6ct") -- for dolphin dark mode
+hl.env("GTK_THEME", "Adwaita:dark") -- for GTK apps dark mode, like Bitwarden
 
 -----------------------
 ----- PERMISSIONS -----
