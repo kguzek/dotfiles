@@ -79,6 +79,7 @@ hl.on("hyprland.start", function()
 	hl.exec_cmd("hypridle")
 	hl.exec_cmd(element .. " --hidden")
 	hl.exec_cmd("notify-device-connections")
+	hl.exec_cmd("bitwarden-desktop")
 end)
 
 hl.on("hyprland.shutdown", function()
