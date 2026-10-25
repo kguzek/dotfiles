@@ -46,7 +46,7 @@ hl.monitor({
 local terminal = "ghostty"
 local menu = "hyprlauncher"
 local browser = "zen-browser"
-local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/pictures/screenshots/%Y%m%d_%H%M%S.png'"
+local screenshotEditor = "satty -f - --copy-command wl-copy -o '~/pictures/Screenshots/%Y%m%d_%H%M%S.png'"
 local screenshotSelectedArea = "slurp -d -b '#10101040' -c '#dddddda0' -F monospace | grim -g - - | "
 local screenshotSelectAndCopy = screenshotSelectedArea
 	.. "wl-copy && notify-send --expire-time 5000 'Screenshot taken' 'Image copied to clipboard'"
