@@ -132,8 +132,8 @@ update_git_repo() {
   local destination="$1"
 
   if [[ ! -d "$destination" ]]; then
-    log-status warn "Repository not found, skipping: $destination"
-    return 0
+    log-status failed "Repository not found: $destination"
+    return 1
   fi
 
   (
@@ -242,12 +242,16 @@ if ! is_skip_self_update; then
   queue_job update_git_repo "$INSTALL_PATH"
 fi
 
-queue_job update_git_repo "$ZSH"
 queue_job update_git_repo "$SCRIPTS_REPO_PATH"
 
-for plugin in "${PLUGIN_REPOS[@]}"; do
-  queue_job ensure_plugin "$plugin"
-done
+if [[ -d "$ZSH" ]]; then
+  queue_job update_git_repo "$ZSH"
+  for plugin in "${PLUGIN_REPOS[@]}"; do
+    queue_job ensure_plugin "$plugin"
+  done
+else
+  log-status warn "Oh My Zsh not found, skipping Oh My Zsh and plugin updates"
+fi
 
 if ! wait_for_jobs; then
   exit_code=1
