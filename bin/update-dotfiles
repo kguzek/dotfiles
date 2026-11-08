@@ -35,7 +35,9 @@ SCRIPT_PATH="${(%):-%x}"
 SCRIPT_DIR="${SCRIPT_PATH:A:h:h}"
 PROGRAM_NAME="${SCRIPT_PATH:t}"
 INSTALL_PATH="$(realpath "$(git -C "$SCRIPT_DIR" rev-parse --show-toplevel || "${SCRIPT_DIR:h}")")"
-DOTFILES_UPDATE_SENTINEL=$(git -C "$INSTALL_PATH" rev-parse --path-format=absolute --git-path dotfiles-updating)
+DOTFILES_STATE_DIR="${XDG_STATE_HOME:-"$HOME/.local/state"}/dotfiles"
+DOTFILES_UPDATE_SENTINEL="$DOTFILES_STATE_DIR/updating"
+mkdir -p "$DOTFILES_STATE_DIR"
 touch "$DOTFILES_UPDATE_SENTINEL"
 trap 'rm -f "$DOTFILES_UPDATE_SENTINEL"' EXIT
 
