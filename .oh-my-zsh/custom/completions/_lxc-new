@@ -1,6 +1,5 @@
 #compdef lxc-new lxc-volume lxc-context lxc-remove
 
-# prints the given settings (array keys for associative arrays) from the scripts' own defaults
 _lxc_defaults() {
   local defaults="${commands[lxc-new]:A:h}/.lxc-defaults"
   [[ -r "$defaults" ]] || return
@@ -17,7 +16,6 @@ _lxc_defaults() {
   )
 }
 
-# containers from `pct list`, described by ID and status; IDs given as arguments are left out
 _lxc_containers() {
   local -a containers skip=("$@")
   local id lxc_status name
@@ -35,24 +33,29 @@ _lxc_containers() {
   _describe 'container' containers
 }
 
-# POOL:PATH, with the pools read from the scripts' own defaults
 _lxc_volume_spec() {
-  if compset -P '*:'; then
-    _message 'path inside the container, e.g. /data/NAME'
-    return
-  fi
+  local colons="${PREFIX//[^:]/}"
+  compset -P '*:'
 
-  local -a pools=(${(f)"$(_lxc_defaults VOLUME_PARENTS)"})
-  compadd -S ':' -q -- $pools
+  case $#colons in
+    0)
+      local -a pools=(${(f)"$(_lxc_defaults VOLUME_STORAGES)"})
+      compadd -S ':' -q -- $pools
+      ;;
+    1)
+      _message 'path inside the container, e.g. /data/NAME'
+      ;;
+    *)
+      _message 'size in GB'
+      compadd -- nobackup
+      ;;
+  esac
 }
 
-# lxc-remove refuses the template and the doco-cd container, so do not offer them
 _lxc_removable_containers() {
   _lxc_containers ${(f)"$(_lxc_defaults TEMPLATE_ID DOCO_CD_ID)"}
 }
 
-# options come from each script's --help (`_arguments --`); only positional arguments and
-# option values that --help cannot express are given here, matched by their help placeholder
 case $service in
   lxc-new)
     _arguments '1:name:' '2:ID:' -- '*=POOL*:volume:_lxc_volume_spec' '*=*:value: '
