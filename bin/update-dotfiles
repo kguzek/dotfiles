@@ -3,7 +3,9 @@
 set -e
 
 export UPDATING_DOTFILES=true
-SCRIPTS_REPO_PATH="$HOME/repos/scripts"
+SCRIPT_PATH="${(%):-%x}"
+SCRIPT_DIR="${SCRIPT_PATH:A:h:h}"
+SCRIPTS_REPO_PATH="${SCRIPT_DIR:h}/scripts"
 GIT_SERVER_HOST='git.guzek.uk'
 
 typeset -U path
