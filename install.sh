@@ -22,7 +22,7 @@ if [ ! -d "$SCRIPTS_DIR" ]; then
   git clone "https://$GIT_SERVER_HOST/kguzek/scripts.git" "$SCRIPTS_DIR"
 fi
 
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+RUNZSH=no sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
 echo 'After updating your default shell to zsh, please log out and log back in, then run ./bin/update-dotfiles'
 
