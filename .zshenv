@@ -8,9 +8,8 @@ _add_to_path() {
   fi
 }
 
-REPOS_PATH="$HOME/repos"
-DOTFILES_PATH="$REPOS_PATH/dotfiles"
-LOCAL_SCRIPTS_PATH="$REPOS_PATH/scripts"
+DOTFILES_PATH="${$(readlink "$HOME/.zshrc"):h}"
+LOCAL_SCRIPTS_PATH="${$(which s):h:h}"
 
 VOLTA_HOME="$HOME/.volta"
 if [ -d "$VOLTA_HOME" ]; then
@@ -27,9 +26,14 @@ fi
 _add_to_path "$HOME/.local/bin"
 
 # Local scripts
-_add_to_path "$DOTFILES_PATH/bin"
-_add_to_path "$LOCAL_SCRIPTS_PATH/$(hostname -s)"
-_add_to_path "$LOCAL_SCRIPTS_PATH/common"
+if [ -n "$DOTFILES_PATH" ]; then
+  _add_to_path "$DOTFILES_PATH/bin"
+fi
+
+if [ -n "$LOCAL_SCRIPTS_PATH" ]; then
+  _add_to_path "$LOCAL_SCRIPTS_PATH/$(hostname -s)"
+  _add_to_path "$LOCAL_SCRIPTS_PATH/common"
+fi
 
 LOCAL_ZSHENV_PATH="$HOME/.zshenv.local"
 if [ -f "$LOCAL_ZSHENV_PATH" ]; then
