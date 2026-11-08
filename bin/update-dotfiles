@@ -2,6 +2,7 @@
 
 set -e
 
+exit_code=0
 export UPDATING_DOTFILES=true
 SCRIPT_PATH="${(%):-%x}"
 SCRIPT_DIR="${SCRIPT_PATH:A:h:h}"
@@ -130,6 +131,11 @@ run_step() {
 update_git_repo() {
   local destination="$1"
 
+  if [[ ! -d "$destination" ]]; then
+    log-status warn "Repository not found, skipping: $destination"
+    return 0
+  fi
+
   (
     cd "$destination" || return 1
     local remote_name="$(git remote | head -1)"
@@ -244,7 +250,8 @@ for plugin in "${PLUGIN_REPOS[@]}"; do
 done
 
 if ! wait_for_jobs; then
-  exit 1
+  exit_code=1
+  log-status warn "Some repositories failed to update, continuing with configuration"
 fi
 
 # Main configurations and run commands
@@ -284,3 +291,5 @@ if is_dry_run; then
 else
   log-status complete "Configuration complete in $(time-script --end)s"
 fi
+
+exit $exit_code
