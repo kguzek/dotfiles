@@ -1,0 +1,69 @@
+#compdef lxc-new lxc-volume lxc-context lxc-remove
+
+# prints the given settings (array keys for associative arrays) from the scripts' own defaults
+_lxc_defaults() {
+  local defaults="${commands[lxc-new]:A:h}/.lxc-defaults"
+  [[ -r "$defaults" ]] || return
+  (
+    source "$defaults"
+    local setting
+    for setting in "$@"; do
+      if [[ "${(tP)setting}" == association* ]]; then
+        print -l -- ${(kP)setting}
+      else
+        print -r -- "${(P)setting}"
+      fi
+    done
+  )
+}
+
+# containers from `pct list`, described by ID and status; IDs given as arguments are left out
+_lxc_containers() {
+  local -a containers skip=("$@")
+  local id lxc_status name
+
+  if (( ! $+commands[pct] )); then
+    _message 'container name or ID'
+    return
+  fi
+
+  pct list 2>/dev/null | awk 'NR > 1 { print $1, $2, $NF }' | while read -r id lxc_status name; do
+    (( ${skip[(Ie)$id]} )) && continue
+    containers+=("$name:$id, $lxc_status")
+  done
+
+  _describe 'container' containers
+}
+
+# POOL:PATH, with the pools read from the scripts' own defaults
+_lxc_volume_spec() {
+  if compset -P '*:'; then
+    _message 'path inside the container, e.g. /data/NAME'
+    return
+  fi
+
+  local -a pools=(${(f)"$(_lxc_defaults VOLUME_PARENTS)"})
+  compadd -S ':' -q -- $pools
+}
+
+# lxc-remove refuses the template and the doco-cd container, so do not offer them
+_lxc_removable_containers() {
+  _lxc_containers ${(f)"$(_lxc_defaults TEMPLATE_ID DOCO_CD_ID)"}
+}
+
+# options come from each script's --help (`_arguments --`); only positional arguments and
+# option values that --help cannot express are given here, matched by their help placeholder
+case $service in
+  lxc-new)
+    _arguments '1:name:' '2:ID:' -- '*=POOL*:volume:_lxc_volume_spec' '*=*:value: '
+    ;;
+  lxc-volume)
+    _arguments '1:container:_lxc_containers' '2:volume:_lxc_volume_spec' --
+    ;;
+  lxc-context)
+    _arguments '1:container:_lxc_containers' --
+    ;;
+  lxc-remove)
+    _arguments '1:container:_lxc_removable_containers' --
+    ;;
+esac
