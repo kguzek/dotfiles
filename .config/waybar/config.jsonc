@@ -6,9 +6,7 @@
   "modules-left": ["hyprland/workspaces", "hyprland/window"],
   "modules-center": ["clock"],
   "modules-right": [
-    "custom/kuma-pi",
-    "custom/kuma-hp",
-    "custom/kuma-wcss",
+    "custom/beacon",
     "hyprland/language",
     "wireplumber#sink",
     "wireplumber#source",
@@ -44,25 +42,12 @@
     "tooltip-format": "{:%A, %d %B %Y}",
   },
 
-  "custom/kuma-pi": {
-    "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-pi.env",
-    "interval": 15,
-    "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-pi.env",
-    "format": "Pi {} ",
-  },
-
-  "custom/kuma-hp": {
-    "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-hp.env",
-    "interval": 15,
-    "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-hp.env",
-    "format": "HP {} ",
-  },
-
-  "custom/kuma-wcss": {
-    "exec": "kuma-waybar --format=waybar --env=$HOME/.config/waybar/kuma-wcss.env",
-    "interval": 15,
-    "on-click": "kuma-waybar open --env=$HOME/.config/waybar/kuma-wcss.env",
-    "format": "WCSS {} ",
+  "custom/beacon": {
+    "exec": "beacon-cli",
+    "return-type": "json",
+    "interval": 30,
+    "on-click": "xdg-open https://status.guzek.uk",
+    "format": "{}",
   },
 
   "hyprland/language": {
