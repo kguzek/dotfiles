@@ -9,7 +9,7 @@ _add_to_path() {
 }
 
 DOTFILES_PATH="${$(readlink "$HOME/.zshrc"):h}"
-LOCAL_SCRIPTS_PATH="${$(which s):h:h}"
+LOCAL_SCRIPTS_PATH="${DOTFILES_PATH:h}/scripts"
 
 VOLTA_HOME="$HOME/.volta"
 if [ -d "$VOLTA_HOME" ]; then
