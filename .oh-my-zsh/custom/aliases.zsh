@@ -23,6 +23,7 @@ alias uc='update-containers'                                                    
 alias oc='opencode'                                                                                                                             # OpenCode
 alias bt='bluetoothctl'                                                                                                                         # BlueTooth control
 alias dus='du --max-depth=1 . | sort --numeric-sort | numfmt --field=1 --unit-separator=" " --from-unit=1024 --to=iec-i --suffix=B --padding=7' # Disk Usage Summary
+alias tv-cam='ssh root@tv.vpn.guzek.uk tv'                                                                                                      # control TV CAMera
 
 # custom git subcommand aliases
 alias gfp='git fetch --prune'
