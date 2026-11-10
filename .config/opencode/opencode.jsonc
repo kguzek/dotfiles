@@ -2,14 +2,6 @@
   "$schema": "https://opencode.ai/config.json",
   "mcp": {
     "servers": {
-      "doco-cd": {
-        "type": "remote",
-        "url": "https://mcp.cd.guzek.uk/mcp",
-        "oauth": false,
-        "headers": {
-          "x-api-key": "{env:DOCO_CD_KEY}",
-        },
-      },
       "linear": {
         "type": "remote",
         "url": "https://mcp.linear.app/mcp",
@@ -32,6 +24,15 @@
         "oauth": false,
         "headers": {
           "Authorization": "Bearer {env:SOLVRO_COOLIFY_API_KEY}",
+        },
+      },
+      "doco-cd": {
+        "type": "remote",
+        "url": "https://mcp.cd.guzek.uk/mcp",
+        "disabled": false,
+        "oauth": false,
+        "headers": {
+          "x-api-key": "{env:DOCO_CD_KEY}",
         },
       },
     },
