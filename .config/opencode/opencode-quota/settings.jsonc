@@ -1,0 +1,29 @@
+// OpenCode Quota server settings, converted on 2026-11-12 from:
+//   /home/konrad/.config/opencode/opencode-quota/quota-toast.jsonc
+// The old file was left in place; OpenCode Quota no longer reads it.
+// Only the settings you chose there are here; a missing key uses its default.
+// Every setting and its default: https://github.com/slkiser/opencode-quota/blob/main/docs/readme/configuration.md
+{
+  "version": 6,
+  "sidebar": {
+    "show": true,
+    "sessionTokens": false,
+  },
+  "statusLine": {
+    "show": true,
+    "withSidebar": true,
+    "home": true,
+  },
+  "toast": {
+    "show": false,
+    "sessionTokens": false,
+  },
+  "words": {
+    "percent": "used",
+    "sessionTokens": "current",
+    "reset": "compact",
+  },
+  "providers": {
+    "off": ["copilot"],
+  },
+}
