@@ -15,7 +15,7 @@ if [ -e "$LINUXBREW_PATH" ]; then
 fi
 
 # Android SDK
-export ANDROID_HOME="$HOME/Android/Sdk"
+export ANDROID_HOME="$HOME/.android/sdk"
 _add_to_path "$ANDROID_HOME/platform-tools"
 
 # Coursier
