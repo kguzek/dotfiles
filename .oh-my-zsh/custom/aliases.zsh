@@ -36,3 +36,6 @@ alias grpo='git remote prune origin'
 alias grbim='git rebase --interactive $(git_main_branch)'
 alias grboo='git rebase --onto "origin/$(git_main_branch)" "$(git merge-base "origin/$(git_main_branch)" HEAD)"'
 alias gshw='git show --word-diff'
+
+# other aliases
+alias bat='batcat'
