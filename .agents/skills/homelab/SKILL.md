@@ -1,89 +1,113 @@
 ---
 name: homelab
 description: >-
-  Manage Konrad's homelab (box, HP, Pi): topology, Proxmox LXC scripts, and service
-  deployment via doco-cd, SOPS and Caddy. Use for this homelab's operations and migrations.
+  Manage Konrad's homelab (box, HP, Pi): Proxmox cluster topology, OpenTofu/Ansible
+  guests, and doco-cd, SOPS and Caddy deploys. Use for its operations and migrations.
 ---
 
 # Homelab
 
+Everything lives in the services repo: `git.guzek.uk/kguzek/services`, branch `main` only,
+cloned on mav at `~/repos/infra/services`. Read its READMEs (`ansible/`, `tofu/`,
+`tofu/cloudflare/`) and `ansible/TODO.md` before changing anything; they are the source of truth
+where this skill is vague.
+
 ## Topology
 
-box, hp and pi are in Gliwice on the same LAN (`192.168.0.0/24`). WireGuard uses
-`10.1.7.0/24`; its server currently runs as a rootless Podman container on hp.
-Refer to hp as HP, never as "legacy".
+Two sites joined by WireGuard (`10.1.7.0/24`). Both LANs are `192.168.0.0/24`, so the other site
+is reached by its VPN address. Hosts and addresses are in `ansible/group_vars/all.yaml`
+(`network_hosts`). Refer to hp as HP, never as "legacy".
 
-| Host | Site    | LAN           | VPN      | Role                                                                          |
-| ---- | ------- | ------------- | -------- | ----------------------------------------------------------------------------- |
-| box  | Gliwice | 192.168.0.227 | 10.1.7.2 | Proxmox VE 9.2, target for all services, GTX 1060 (Pascal, NVIDIA 580 branch) |
-| pi   | Gliwice | 192.168.0.217 | 10.1.7.4 | Raspbian 13, pihole, status-pi, Tang installed; no Clevis clients use it yet |
-| hp   | Gliwice | 192.168.0.224 | 10.1.7.7 | Fedora 44, rootless Podman as `konrad`, WireGuard server, worktrees in `/opt/<svc>` |
-| mav  | —       | —             | —        | the user's MacBook; reaches hp via LAN, box via VPN                           |
+| Host | Site            | LAN           | VPN      | Role                                                                     |
+| ---- | --------------- | ------------- | -------- | ------------------------------------------------------------------------ |
+| box  | Gliwice         | 192.168.0.227 | 10.1.7.2 | Proxmox VE 9.2, most services (Docker per LXC), PBS, GTX 1060            |
+| hp   | Wrocław (T17)   | 192.168.0.224 | 10.1.7.7 | Proxmox VE 9.2, WireGuard hub (10.1.7.1), Tang, native-service LXCs      |
+| pi   | Gliwice         | 192.168.0.217 | 10.1.7.4 | Raspbian 13: corosync qnetd, pihole, Tang (box's unlock), monitoring, VPN Caddy (10.1.7.11), internet exit for 10.1.7.192/26 |
+| rig  | Wrocław (T17)   | 192.168.0.17  | 10.1.7.9 | desktop, not managed by Ansible                                          |
+| mav  | —               | —             | —        | the user's MacBook, the controller for OpenTofu and Ansible              |
 
-- SSH: `s <host>` (`~/repos/scripts/common/s`) tries `<host>.lan.guzek.uk`, `<host>.vpn.guzek.uk`,
-  then `ssh-<host>.guzek.uk`. On box use `s root@box`. `sudo` on hp needs a password.
-- Cloudflare tunnels (manage with `cf`): `wrocław-hp` serves `*.guzek.uk` and other domains via
-  hp's root-podman Caddy; `gliwice-box` (cloudflared on the box host) and `gliwice-pi`.
-  VPN-only hostnames resolve to `hp.vpn.guzek.uk` today.
-- Keep hp and box unclustered. For future cross-site resilience, use PBS sync and restore;
-  do not run corosync over a WAN.
-- Manage existing stacks on hp with `podman compose` as `konrad`, from their worktrees in
-  `/opt/<svc>`. Do not use `systemctl` or `podman-compose@` units to manage these stacks.
+- box and hp form the Proxmox cluster `homelab`, with pi as the qdevice. Guest IDs are unique
+  across the cluster. One API endpoint, `https://proxmox.box.guzek.uk/` (VPN only), covers both nodes.
+- Root SSH works on box and hp (`root@box.vpn.guzek.uk`, `root@hp.vpn.guzek.uk`); pi is `konrad@`
+  with passwordless sudo. `s <host>` (scripts repo, `common/s`) tries `.lan`, `.vpn`, then `ssh-<host>`.
+- box's VPN peer NETMAPs `10.1.7.100–199` to `192.168.0.100–199`, so VPN clients reach box's LXCs
+  at `10.1.7.<id>`.
+- Cloudflare tunnels (manage with `cf`, or `tofu/cloudflare` for `wrocław-hp`): `gliwice-box`
+  (cloudflared on the box host), `wrocław-hp` (hp host), `gliwice-pi`.
+- VPN-only hostnames are site-qualified, `<svc>.<site>.guzek.uk`: the unproxied wildcards
+  `*.box.guzek.uk` → 10.1.7.112 (box's Caddy), `*.hp.guzek.uk` → 10.1.7.7, `*.pi.guzek.uk` → 10.1.7.11.
 
-## box storage and containers
+## Disks and unlock
 
-- `rpool` (SSD, Proxmox storage `local-zfs`): root disks, databases, `rpool/tools`, `rpool/services`.
-- `dpool` (8 TB HDD, storage `dpool`): bulk data. Empty so far.
-- `backup` pool: PBS datastore, storage `pbs-box`, about 770 GB, client-side encrypted.
-- Unencrypted for now; the system disk will later be reinstalled as Debian + LUKS (clevis/Tang) + Proxmox.
+- box: `rpool` (SSD, LUKS `rpool_ssd`) and the `backup` pool (LUKS `backup_crypt`, PBS datastore
+  `pbs-box`) unlock with clevis/Tang against pi (`192.168.0.217:7500`); dropbear in the initramfs
+  as a fallback. `dpool` (8 TB HDD) uses ZFS native encryption, unlocked by `dpool-unlock.service`.
+- hp: `rpool` (LUKS) unlocks manually over dropbear in the initramfs, deliberately without clevis.
+  `dpool` (1 TB SSD, LUKS) unlocks with a keyfile from the encrypted root.
+- Storage IDs on both nodes: `local-zfs` (rpool), `dpool`, `pbs-box`. Guest backups: one nightly
+  cluster job at 02:00 to `pbs-box` (`ansible/group_vars/pve.yaml`); box's host backup
+  (`pve-host-backup`) at 02:30.
+- Boot-critical config on box (crypttab, clevis, GRUB, udev) is still manual. Never touch it
+  without an explicit go-ahead; see `ansible/TODO.md`.
 
-| ID   | Name                                | IP   |
-| ---- | ----------------------------------- | ---- |
-| 9000 | docker-base (template)              | DHCP |
-| 100  | tv-cam (not managed by the scripts) | .100 |
-| 110  | doco-cd                             | .110 |
-| 111  | umami                               | .111 |
-| 112  | caddy                               | .112 |
+## Who manages what
 
-The container ID is the last octet of its IP (100–254). Mount point layout in every app container:
-`mp0` tools (`/rpool/tools` → `/opt/tools`, ro), `mp1` services clone (`/rpool/services` →
-`/srv/services`, ro), `mp2`+ data volumes.
+| Layer                                  | Tool                                          |
+| -------------------------------------- | --------------------------------------------- |
+| Host config (pve nodes, pi)            | Ansible, `ansible/site.yaml`, `pi.yaml`       |
+| Guests (containers themselves)         | OpenTofu, `tofu/hp.tf`, `tofu/box.tf`         |
+| Inside hp's guests (native services)   | Ansible, `ansible/hp-services.yaml`           |
+| Inside box's guests (Docker, contexts) | Ansible, `ansible/box-guests.yaml`            |
+| Apps on box                            | doco-cd, `.doco-cd.yaml` + `stacks/<app>/`    |
+| Cloudflare tunnel and DNS (hp, VPN)    | OpenTofu, `tofu/cloudflare/`                  |
 
-Template 9000: Debian 13 with Docker, root shell zsh, `timezone: host`, `machine-id` set to
-`uninitialized` (clones regenerate SSH host keys via `sshd-keygen.service`), doco-cd's public key
-in root's `authorized_keys`. It must not have bind mounts, because `pct clone` refuses them. To
-change it, edit `/rpool/data/basevol-9000-disk-0` from the host, then recreate `@__base__`.
+There are no custom wrapper scripts for guests any more; do not reintroduce them.
 
-## Scripts (run on box as root)
+**OpenTofu.** From `tofu/`: `. ./env.sh` mints a two-hour `root@pam` ticket over SSH (root SSH is
+the only credential; `root@pam`, not a token, is needed for bind mounts) and loads the state
+passphrase. Then `tofu plan -var-file=hp.tfvars -out=x.tfplan`, review, `tofu apply x.tfplan`.
+State is local and encrypted; back it up to `~/.config/opentofu/backups/` before each apply.
+Guests have `prevent_destroy`.
 
-They live in `~/repos/personal/scripts/box` (on box: `/rpool/tools/config/scripts/box`, on PATH).
-Every script has `--help` and `-d/--dry-run`. Dry-run first; after any change, show the real result.
+**Ansible.** Always `--check --diff` first, and adopt existing state as a zero-diff change. Box's
+guests are reached with `pct exec` through box (`community.proxmox.proxmox_pct_remote`), using the
+inventory from `tofu output -json box_inventory > box-inventory.json`. A run is slow and loads
+box's 6 cores; keep the default 5 forks (more trips sshd's `MaxStartups`).
 
-```bash
-lxc-new [-m MB] [-c N] [-s GB] [-v POOL:PATH[:GB][:nobackup]]... [-N] [-n] NAME ID
-lxc-volume CONTAINER POOL:PATH[:GB][:nobackup]    # POOL: rpool | dpool, default 10 GB
-lxc-context [-r] CONTAINER                         # Docker context in doco-cd, pins SSH host key
-lxc-remove [-B] [-y] CONTAINER                     # vzdump to pbs-box, then destroy with volumes
-services-sync                                      # systemd timer, pulls /rpool/services every minute
-```
+## box's containers
 
-- `lxc-new` clones 9000, sets the IP and the tools and services mounts, adds volumes, starts the
-  container, waits for SSH and registers the context. `-N` skips the context (only for doco-cd itself).
-- `lxc-remove` refuses 9000 and 110. Do not call it `lxc-destroy`: that name is LXC's own tool on Proxmox.
-- Settings live in `.lxc-defaults`. Zsh completions in dotfiles read options from `--help`.
+The container ID is the last octet of its IP (`192.168.0.<id>`). `tofu/box.tf` lists them in
+`local.box_guests` (cores, memory, root disk, tags, Proxmox description, mounts, firewall,
+`vpn_route`); tv-cam (100, GPU relay) is a separate resource. Template 9000 (`docker-base`) is
+being retired: new guests start from the stock Debian 13 template and `docker_guest` sets them up.
 
-## Deploying: doco-cd and the services repo
+Mounts in every app container: `mp0` `/rpool/tools` → `/opt/tools` (ro: tools, Neovim, root's
+dotfiles), `mp1` `/rpool/services` → `/srv/services` (ro: the services clone, pulled every minute
+by `services-sync` on the host), `mp2`+ data volumes. doco-cd (110) has only `mp0`.
 
-- Repo `git.guzek.uk/kguzek/services`, branch `main` only. Clone on mav: `~/repos/infra/services`
-  (single-branch). The old per-service branches and hp's `~/repos/services` are legacy and contain
-  plaintext secrets in history.
+- New guest: add an entry with a free ID, plan/apply, regenerate the inventory, run
+  `box-guests.yaml` (Docker, VPN route, doco-cd's key, pinned host key and Docker context), then add
+  the stack.
+- New volume: add `{ volume = "local-zfs" | "dpool", path = …, size = "10G" }` (`backup = false`
+  for re-downloadable data). Existing volumes are named in full (`local-zfs:subvol-111-disk-1`).
+- Removing a guest destroys its volumes: back it up (`vzdump <id> --storage pbs-box`), drop
+  `prevent_destroy` for that apply, then rerun `box-guests.yaml` to drop its context.
+- GPU passthrough (immich, jellyfin, tv-cam) uses raw `lxc.*` lines in `/etc/pve/lxc/<id>.conf`
+  that the API can't set; they stay outside OpenTofu.
+
+## hp's guests
+
+`caddy-hp` (212), `monitoring-hp` (213), `syncthing-hp` (218), from `tofu/hp.tf`, configured by
+`hp-services.yaml` with packaged, native services (no Docker). hp's Caddy serves hp-hosted
+hostnames through the `wrocław-hp` tunnel and `*.hp.guzek.uk`.
+
+## Deploying apps on box: doco-cd
+
 - Layout: `.doco-cd.yaml` (one YAML document per stack: `name`, `working_dir: stacks/<app>`,
   `context: <app>`), `stacks/<app>/compose.yaml`, `stacks/<app>/.env` (SOPS), `.sops.yaml`.
 - doco-cd runs in 110 and polls `main` every 60 s. It deploys each stack to its context
   (`ssh://root@192.168.0.<id>`), so containers run in the app's own LXC. It manages itself from
-  `stacks/doco-cd` (self-update, image pinned by tag and digest). Its secrets live only in 110:
-  `/etc/doco-cd/git-token`, `/etc/doco-cd/age.key`. Bootstrap after rebuilding 110:
-  `docker run … apply-self --bootstrap` (see `stacks/doco-cd`).
+  `stacks/doco-cd`. Its secrets live only in 110: `/etc/doco-cd/git-token`, `/etc/doco-cd/age.key`.
 - Check a deploy: `docker compose -p doco-cd logs` in 110, `docker ps` in the app LXC, and the
   `cd.doco.deployment.target.sha` label on its containers.
 
@@ -96,39 +120,28 @@ mount single files (git replaces files, so a single-file mount keeps the old cop
 bake config into images with `COPY`. Config changes arrive through `services-sync` within a
 minute, without doco-cd. The app reloads on its own (Caddy `--watch`), or restart it.
 
-**Data.** Use Proxmox volumes via `lxc-volume`, never host bind mounts: volumes are backed up,
-snapshotted and restored with their container. Databases go on `rpool`, bulk data on `dpool`;
-re-downloadable data gets `:nobackup`. Remember that destroying a container destroys its volumes.
+**Data.** Use Proxmox volumes (a `mounts` entry in `tofu/box.tf`), never host bind mounts:
+volumes are backed up, snapshotted and restored with their container. Databases go on `rpool`,
+bulk data on `dpool`.
 
-**Secrets.** Only in SOPS-encrypted `stacks/<app>/.env`. Recipients in `.sops.yaml` are
-doco-cd's age key (`age1242qk…`) and mav's (`age1wp0u…`, in
-`~/Library/Application Support/sops/age/keys.txt`). Never commit plaintext. Check for `ENC[`
-before staging. Write secret files with `umask 077`. Keep tokens out of cloned repos.
+**Secrets.** App secrets only in SOPS-encrypted `stacks/<app>/.env`; host secrets in
+`ansible/{host,group}_vars/*.sops.yaml`. Recipients in `.sops.yaml` are doco-cd's age key
+(`age1242qk…`) and mav's (`age1wp0u…`, in `~/Library/Application Support/sops/age/keys.txt`).
+Never commit plaintext; check for `ENC[` before staging. Never put Proxmox or root SSH
+credentials in the repo, not even encrypted.
 
-**Caddy.** box's Caddy (112) serves only box-hosted services; hp has its own Caddy:
-`stacks/caddy/config/Caddyfile` with `import Caddyfile.*`, `trusted_proxies` = box host
+**Caddy on box** (112): `stacks/caddy/config/Caddyfile` with `import Caddyfile.*`;
+`Caddyfile.vpn` holds VPN-only sites (`import vpn`). `trusted_proxies` = box host
 (`192.168.0.227`), Cloudflare DNS challenge, sites listed for both HTTPS and `http://` (tunnel).
-`--watch` reloads imported files too, but **stops for good after a syntax error**; fix the file,
-then `docker restart caddy` in 112. Moving a hostname to box: add
-`cf routes gliwice-box add <host> http://192.168.0.112` and an explicit DNS record to the box
-tunnel, which takes priority over the `*.guzek.uk` wildcard.
-
-**Migrating a service from hp.**
-
-1. Write `stacks/<app>/` and a `.doco-cd.yaml` entry.
-2. Run `lxc-new` with volumes, then push.
-3. Copy the data: stop the app on hp, stream `pg_dump -Fc` into `pg_restore` with plain
-   `ssh -T hp.lan.guzek.uk … | ssh -T root@box.vpn.guzek.uk …`. Never pipe data through `s`:
-   it prints status lines to stdout and forces a TTY. Compare row counts.
-4. Cut over the hostname.
-5. Bring down the old stack on hp with `cd /opt/<app> && podman compose down` as `konrad`,
-   without removing volumes, and keep its data for a few days.
+`--watch` **stops for good after a syntax error**; fix the file, then `docker restart caddy` in 112.
+A public hostname on box needs `cf routes gliwice-box add <host> http://192.168.0.112` and an
+explicit DNS record, which takes priority over the `*.guzek.uk` wildcard.
 
 **Working style.**
 
 - Investigate read-only first and report facts with evidence. Ask before changing infrastructure,
-  and never push without being asked.
-- Write commands and scripts in the existing style: zsh, `zparseopts`, `log-status`, `--help`,
-  no filler comments, units next to scripts with install notes in the header.
+  and never push without being asked. Changes to live config should be zero-diff adoptions or
+  explicitly approved changes.
+- Prefer the tools' own idioms (OpenTofu resources, Ansible modules) over custom scripts.
 - `pct exec` runs with a minimal PATH and the `C.UTF-8` locale.
 - Prefer simple solutions; the user rejects over-engineering.
