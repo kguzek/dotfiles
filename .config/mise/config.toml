@@ -9,10 +9,9 @@ pnpm = "latest"
 
 # Global CLIs
 "npm:@deveco/deveco-cli" = "latest"
-# Low-download packages need explicit approval from mise's npm installer
+# Below mise's 1000 weekly downloads threshold, so it needs explicit approval
 "npm:@solvro/config" = { version = "latest", allow_low_downloads = true }
 "npm:accent-cli" = "latest"
-"npm:badclaude" = { version = "latest", allow_low_downloads = true }
 "npm:ccusage" = "latest"
 "npm:create-vite" = "latest"
 "npm:json5" = "latest"
