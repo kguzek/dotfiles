@@ -36,8 +36,12 @@ if [ -d "$HOME/.bun" ]; then
   path+=("$BUN_INSTALL/bin")
 fi
 
-# pnpm
-PNPM_HOME="$HOME/.local/share/pnpm"
+# pnpm global packages (pnpm itself is installed by mise)
+if [[ "$OSTYPE" == darwin* ]]; then
+  PNPM_HOME="$HOME/Library/pnpm"
+else
+  PNPM_HOME="${XDG_DATA_HOME:-$HOME/.local/share}/pnpm"
+fi
 if [ -d "$PNPM_HOME" ]; then
   export PNPM_HOME
   # pnpm v10 uses "$PNPM_HOME" as the binary container, but v11 uses a `bin` subdirectory

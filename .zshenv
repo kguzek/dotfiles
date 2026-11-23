@@ -11,11 +11,11 @@ _add_to_path() {
 DOTFILES_PATH="${$(readlink "$HOME/.zshrc"):h}"
 LOCAL_SCRIPTS_PATH="${DOTFILES_PATH:h}/scripts"
 
-VOLTA_HOME="$HOME/.volta"
-if [ -d "$VOLTA_HOME" ]; then
-  export VOLTA_HOME
-  export VOLTA_FEATURE_PNPM=1
-  path+=("$VOLTA_HOME/bin")
+# mise shims, so non-interactive shells (IDEs, scripts) find mise-managed tools.
+# Interactive shells additionally run `mise activate` in .zshrc.
+MISE_SHIMS_PATH="${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims"
+if [ -d "$MISE_SHIMS_PATH" ]; then
+  path=("$MISE_SHIMS_PATH" $path)
 fi
 
 CARGO_ENV="$HOME/.cargo/env"

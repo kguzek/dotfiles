@@ -4,7 +4,7 @@ Welcome to my personal terminal configuration!
 
 ## Overview
 
-This repository contains a basic configuration of vim, a more advanced configuration of neovim based on [NvChad](https://github.com/nvchad/starter), and Zsh dotfiles specific to my use cases as a web developer. One of my optimizations is to [lazy-load Node.js](./.zshrc#L51) by deferring the initialization of `nvm` until the first invocation of a Node.js-related binary in a given shell session, which significantly improves terminal startup.
+This repository contains a basic configuration of vim, a more advanced configuration of neovim based on [NvChad](https://github.com/nvchad/starter), and Zsh dotfiles specific to my use cases as a web developer. Language toolchains (Node.js, pnpm, Erlang/Elixir, global npm CLIs) are managed by [mise](https://mise.jdx.dev), configured in [`.config/mise/config.toml`](./.config/mise/config.toml).
 
 ## Installation
 
