@@ -12,6 +12,13 @@ cloned on mav at `~/repos/infra/services`. Read its READMEs (`ansible/`, `tofu/`
 `tofu/cloudflare/`) and `ansible/TODO.md` before changing anything; they are the source of truth
 where this skill is vague.
 
+## Service placement
+
+Provision new and migrated services on box and HP in Proxmox LXC containers.
+Install packaged services directly in their LXC when practical. For services
+that require Docker, run Docker inside the LXC, including Forgejo Actions
+runners. Create a QEMU/KVM VM only when Konrad explicitly requests one.
+
 ## Topology
 
 Two sites joined by WireGuard (`10.1.7.0/24`). Both LANs are `192.168.0.0/24`, so the other site
