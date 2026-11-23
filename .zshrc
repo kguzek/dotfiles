@@ -46,7 +46,7 @@ source $ZSH/oh-my-zsh.sh
 
 export EDITOR='nvim'
 
-# mise (Node.js, pnpm, Erlang/Elixir and other toolchains)
+# mise
 if command -v mise >/dev/null 2>&1; then
   eval "$(mise activate zsh)"
 fi

@@ -1,26 +1,6 @@
-# Global toolchain, managed by mise (https://mise.jdx.dev)
-# Projects override these with their own mise.toml, .tool-versions, .nvmrc or .node-version.
-
 [tools]
 node = "lts"
-# Installed from the native release binary (aqua backend). Projects pinning
-# another version via package.json#packageManager are switched to it by pnpm itself.
 pnpm = "latest"
 
-# Global CLIs
-"npm:@deveco/deveco-cli" = "latest"
-# Below mise's 1000 weekly downloads threshold, so it needs explicit approval
-"npm:@solvro/config" = { version = "latest", allow_low_downloads = true }
-"npm:accent-cli" = "latest"
-"npm:ccusage" = "latest"
-"npm:create-vite" = "latest"
-"npm:json5" = "latest"
-"npm:langfuse-cli" = "latest"
-"npm:neon" = "latest"
-"npm:node-gyp" = "latest"
-"npm:npm-check-updates" = "latest"
-"npm:serve" = "latest"
-
 [settings]
-# Respect .nvmrc / .node-version files in projects
 idiomatic_version_file_enable_tools = ["node"]

@@ -36,7 +36,7 @@ if [ -d "$HOME/.bun" ]; then
   path+=("$BUN_INSTALL/bin")
 fi
 
-# pnpm global packages (pnpm itself is installed by mise)
+# pnpm
 if [[ "$OSTYPE" == darwin* ]]; then
   PNPM_HOME="$HOME/Library/pnpm"
 else

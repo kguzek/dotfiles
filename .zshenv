@@ -11,8 +11,6 @@ _add_to_path() {
 DOTFILES_PATH="${$(readlink "$HOME/.zshrc"):h}"
 LOCAL_SCRIPTS_PATH="${DOTFILES_PATH:h}/scripts"
 
-# mise shims, so non-interactive shells (IDEs, scripts) find mise-managed tools.
-# Interactive shells additionally run `mise activate` in .zshrc.
 MISE_SHIMS_PATH="${MISE_DATA_DIR:-${XDG_DATA_HOME:-$HOME/.local/share}/mise}/shims"
 if [ -d "$MISE_SHIMS_PATH" ]; then
   path=("$MISE_SHIMS_PATH" $path)
